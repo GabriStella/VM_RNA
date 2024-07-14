@@ -1,0 +1,407 @@
+Elaborazione dei file XML:   0%|                          | 0/49  OpenData_Aiuti_2021_12_002.xml dimensioni: 1246   
+15:05:35
+0 - 15:08:00
+100000 - 15:09:00
+200000 - 15:10:08
+300000 - 15:11:23
+inizio salvataggio alle - 15:16:32
+fine: 15:36:20 
+
+Elaborazione dei file XML:  18%|██▊            | 9/49 : OpenData_Aiuti_2022_01.xml dimensioni: 362
+15:36:20
+0 - 15:36:53
+100000 - 15:38:12
+inizio salvataggio alle - 15:39:07
+fine: 15:46:17 
+
+Elaborazione dei file XML:  20%|██▊           | 10/49 : OpenData_Aiuti_2022_02.xml dimensioni: 1227
+15:46:17
+0 - 15:49:07
+100000 - 15:50:15
+200000 - 15:51:10
+300000 - 15:52:09
+400000 - 15:53:16
+inizio salvataggio alle - 15:56:40
+fine: 16:22:19
+
+Elaborazione dei file XML:  22%|██▋         | 11/49 : OpenData_Aiuti_2022_03.xml dimensioni: 480        
+16:22:19
+0 - 16:23:06
+100000 - 16:24:30
+inizio salvataggio alle - 16:25:53
+fine: 16:35:43
+
+Elaborazione dei file XML:  24%|██▉         | 12/49 : OpenData_Aiuti_2022_04.xml dimensioni: 311        
+16:35:43
+0 - 16:36:20
+inizio salvataggio alle - 16:37:44
+fine: 16:42:44 
+
+Elaborazione dei file XML:  27%|███▏        | 13/49 : OpenData_Aiuti_2022_05.xml dimensioni: 294
+16:42:44
+0 - 16:43:12
+inizio salvataggio alle - 16:44:49
+fine: 16:49:54 
+
+Elaborazione dei file XML:  29%|███▍        | 14/49 : OpenData_Aiuti_2022_06.xml dimensioni: 512
+16:49:54
+0 - 16:50:44
+100000 - 16:51:28
+inizio salvataggio alle - 16:53:02
+fine: 17:01:37 
+
+Elaborazione dei file XML:  31%|███▋        | 15/49 : OpenData_Aiuti_2022_07.xml dimensioni: 367
+17:01:37
+0 - 17:02:13
+100000 - 17:03:18
+inizio salvataggio alle - 17:04:34
+fine: 17:09:52 
+
+Elaborazione dei file XML:  33%|███▉        | 16/49 : OpenData_Aiuti_2022_08.xml dimensioni: 71
+17:09:52
+0 - 17:10:01
+inizio salvataggio alle - 17:10:29
+fine: 17:11:29 
+
+Elaborazione dei file XML:  35%|████▏       | 17/49 : OpenData_Aiuti_2022_09.xml dimensioni: 122
+17:11:29
+0 - 17:11:42
+inizio salvataggio alle - 17:12:16
+fine: 17:14:24 
+
+Elaborazione dei file XML:  37%|████▍       | 18/49 : OpenData_Aiuti_2022_10.xml dimensioni: 182
+17:14:24
+0 - 17:14:42
+inizio salvataggio alle - 17:15:34
+fine: 17:18:14 
+
+Elaborazione dei file XML:  39%|████▋       | 19/49 : OpenData_Aiuti_2022_11.xml dimensioni: 1335
+17:18:14
+0 - 17:20:58
+100000 - 17:22:07
+200000 - 17:23:10
+300000 - 17:24:22
+400000 - 17:25:33
+inizio salvataggio alle - 17:30:30
+fine: 17:53:38 
+
+Elaborazione dei file XML:  41%|████▉       | 20/49 : OpenData_Aiuti_2022_11_002.xml dimensioni: 235
+17:53:38
+0 - 17:54:07
+inizio salvataggio alle - 17:56:39
+fine: 18:01:03 
+
+Elaborazione dei file XML:  43%|█████▏      | 21/49 : OpenData_Aiuti_2022_12.xml dimensioni: 377
+18:01:03
+0 - 18:01:39
+100000 - 18:02:20
+inizio salvataggio alle - 18:03:26
+fine: 18:10:16 
+
+Elaborazione dei file XML:  45%|█████▍      | 22/49 : OpenData_Aiuti_2023_01.xml dimensioni: 829
+18:10:16
+0 - 18:11:37
+100000 - 18:12:57
+200000 - 18:14:04
+inizio salvataggio alle - 18:16:50
+fine: 18:35:52 
+
+Elaborazione dei file XML:  47%|█████▋      | 23/49 Processing file: OpenData_Aiuti_2023_02.xml dimensioni: 254
+18:35:52
+0 - 18:36:21
+inizio salvataggio alle - 18:37:51
+fine: 18:42:21 
+
+------------------------------------------------------ {KeyboardInterrupt} processati 15 file-------------------------------------------------------------------------------------
+
+Elaborazione dei file XML:  49%|█████▉      |  24/49 Processing file: OpenData_Aiuti_2023_03.xml dimensioni: 1622
+18:48:52
+0 - 18:51:55
+100000 - 18:52:45
+200000 - 18:53:38
+300000 - 18:54:43
+400000 - 18:55:43
+inizio salvataggio alle - 19:00:13
+fine: 19:23:03 
+
+Elaborazione dei file XML:  51%|███████▎    | 25/49 Processing file: OpenData_Aiuti_2023_03_002.xml dimensioni: 530
+19:23:03
+0 - 19:23:57
+100000 - 19:25:43
+inizio salvataggio alle - 19:26:50
+fine: 19:33:59 
+
+
+Elaborazione dei file XML:  53%|███████▎    | 25/49 Processing file: OpenData_Aiuti_2023_04.xml dimensioni: 1751
+19:35:35
+0 - 19:38:44
+100000 - 19:39:34
+200000 - 19:40:37
+300000 - 19:41:43
+400000 - 19:42:46
+inizio salvataggio alle - 19:47:17
+fine: 20:09:50
+
+Elaborazione dei file XML:  55%|████████▊       | 27/49 : OpenData_Aiuti_2023_04_002.xml dimensioni: 1811
+20:09:50
+0 - 20:13:53
+100000 - 20:15:50
+200000 - 20:16:45
+300000 - 20:17:58
+400000 - 20:19:12
+inizio salvataggio alle - 20:24:04
+fine: 20:48:56 
+
+Elaborazione dei file XML:  57%|██████▎    | 28/49 : OpenData_Aiuti_2023_04_003.xml dimensioni: 1118
+20:48:56
+0 - 20:51:03
+100000 - 20:53:13
+200000 - 20:54:00
+300000 - 20:54:58
+inizio salvataggio alle - 20:57:15
+fine: 21:13:00 
+
+Elaborazione dei file XML:  59%|██████▌    | 29/49 : OpenData_Aiuti_2023_05.xml dimensioni: 1536
+21:13:00
+0 - 21:16:41
+100000 - 21:18:28
+200000 - 21:19:25
+300000 - 21:20:32
+400000 - 21:21:40
+inizio salvataggio alle - 21:26:30
+fine: 21:52:14 
+
+Elaborazione dei file XML:  61%|██████▋    | 30/49 : OpenData_Aiuti_2023_05_002.xml dimensioni: 1556
+21:52:14
+0 - 21:55:56
+100000 - 21:58:11
+200000 - 21:59:08
+300000 - 22:00:17
+400000 - 22:01:27
+inizio salvataggio alle - 22:06:14
+fine: 22:34:05 
+
+Elaborazione dei file XML:  63%|██████▉    | 31/49 : OpenData_Aiuti_2023_05_003.xml dimensioni: 1469
+22:34:05
+0 - 22:37:48
+100000 - 22:40:09
+200000 - 22:41:04
+300000 - 22:42:08
+400000 - 22:43:18
+inizio salvataggio alle - 22:48:01
+fine: 23:14:12 
+
+Elaborazione dei file XML:  65%|███████▏   | 32/49 : OpenData_Aiuti_2023_05_004.xml dimensioni: 1436
+23:14:12
+0 - 23:17:55
+100000 - 23:20:33
+200000 - 23:21:40
+300000 - 23:22:56
+400000 - 23:24:12
+inizio salvataggio alle - 23:29:15
+
+
+
+Elaborazione dei file XML:  67%|██████▋   | 33/49 : OpenData_Aiuti_2023_05_005.xml dimensioni: 1452    
+23:56:43
+0 - 00:00:46
+100000 - 00:03:04
+200000 - 00:04:08
+300000 - 00:05:24
+400000 - 00:06:34
+inizio salvataggio alle - 00:11:56
+fine: 00:39:00
+
+Elaborazione dei file XML:  69%|██████▉   | 34/49 : OpenData_Aiuti_2023_05_006.xml dimensioni: 1445
+01:04:55
+0 - 01:07:32
+100000 - 01:08:35
+200000 - 01:09:39
+300000 - 01:10:45
+400000 - 01:11:44
+inizio salvataggio alle - 01:16:39
+fine: 01:36:13
+
+Elaborazione dei file XML:  60%|█████████▋      | 35/58 : OpenData_Aiuti_2023_05_007.xml dimensioni: 357
+01:36:13
+0 - 01:36:45
+100000 - 01:38:11
+inizio salvataggio alle - 01:39:05
+fine: 01:43:50 
+
+Elaborazione dei file XML:  62%|█████████▉      | 36/58 : OpenData_Aiuti_2023_06.xml dimensioni: 642
+01:43:50
+0 - 01:44:50
+100000 - 01:45:44
+200000 - 01:46:26
+inizio salvataggio alle - 01:47:52
+fine: 01:56:51 
+
+Elaborazione dei file XML:  64%|█████████▌     | 37/58 : OpenData_Aiuti_2023_07.xml dimensioni: 173
+01:56:51
+0 - 01:57:09
+inizio salvataggio alle - 01:58:08
+fine: 02:00:14 
+
+Elaborazione dei file XML:  66%|█████████▊     | 38/58 : OpenData_Aiuti_2023_08.xml dimensioni: 149
+02:00:14
+0 - 02:00:29
+inizio salvataggio alle - 02:01:07
+fine: 02:02:50 
+
+Elaborazione dei file XML:  67%|██████████     | 39/58 : OpenData_Aiuti_2023_09.xml dimensioni: 176
+02:02:50
+0 - 02:03:05
+inizio salvataggio alle - 02:03:50
+fine: 02:06:16 
+
+Elaborazione dei file XML:  69%|████████▉    | 40/58 : OpenData_Aiuti_2023_10.xml dimensioni: 261
+02:06:16
+0 - 02:06:41
+inizio salvataggio alle - 02:07:49
+fine: 02:11:15 
+
+Elaborazione dei file XML:  71%|█████████▏   | 41/58 : OpenData_Aiuti_2023_11.xml dimensioni: 553
+02:11:15
+0 - 02:12:16
+100000 - 02:12:55
+200000 - 02:13:29
+inizio salvataggio alle - 02:14:48
+fine: 02:20:55 
+
+Elaborazione dei file XML:  72%|█████████▍   | 42/58 : OpenData_Aiuti_2023_12.xml dimensioni: 884
+02:20:55
+0 - 02:22:33
+100000 - 02:23:50
+200000 - 02:24:38
+300000 - 02:25:37
+inizio salvataggio alle - 02:28:15
+fine: 02:38:43 
+
+Elaborazione dei file XML:  74%|████████▏  | 43/58 : OpenData_Aiuti_2024_01.xml dimensioni: 1458
+02:38:43
+0 - 02:41:53
+
+----------------------------------------------------------------------- Si è interrotto nella notte...--------------------------------------------------------------------------------
+
+
+
+Elaborazione dei file XML:  84%|█████████████▌  | 49/58 : OpenData_Aiuti_2024_02_005.xml dimensioni: 1766
+13:05:24
+0 - 13:11:07
+100000 - 13:13:00
+200000 - 13:14:00
+300000 - 13:15:08
+400000 - 13:16:10
+inizio salvataggio alle - 13:18:54
+fine: 13:39:03 
+
+Elaborazione dei file XML:  86%|████████████  | 50/58 : OpenData_Aiuti_2024_02_006.xml dimensioni: 749
+13:39:03
+0 - 13:41:08
+100000 - 13:42:58
+200000 - 13:43:33
+inizio salvataggio alle - 13:44:01
+fine: 13:52:35 
+
+
+
+----------------------------------------------------------------------- Ha crashato male... --------------------------------------------------------------------------------
+-------------------------------------ma vbb abbiamo perso solo un po' di avanzamento --------------------------------------------------------------------------------
+
+
+Elaborazione dei file XML:   0%|       | 0/58 : OpenData_Aiuti_2024_03_002.xml dimensioni: 1763
+14:50:17
+0 - 14:55:34
+100000 - 14:56:19
+200000 - 14:57:14
+300000 - 14:58:08
+400000 - 14:59:04
+inizio salvataggio alle - 15:01:12
+fine: 15:22:04 
+
+Elaborazione dei file XML:  91%|██████████████▌ | 53/58 : OpenData_Aiuti_2024_03_003.xml dimensioni: 1647
+15:22:04
+0 - 15:27:34
+100000 - 15:29:22
+200000 - 15:30:15
+300000 - 15:31:25
+400000 - 15:32:27
+inizio salvataggio alle - 15:35:19
+fine: 15:55:24 
+
+Elaborazione dei file XML:  93%|█████████████ | 54/58 : OpenData_Aiuti_2024_03_004.xml dimensioni: 1364
+15:55:24
+0 - 15:59:53
+100000 - 16:01:49
+200000 - 16:02:30
+300000 - 16:03:20
+400000 - 16:04:22
+inizio salvataggio alle - 16:06:37
+fine: 16:24:32
+
+Elaborazione dei file XML:  95%|████████████▎| 55/58 : OpenData_Aiuti_2024_04.xml dimensioni: 186
+16:24:32
+0 - 16:25:09
+inizio salvataggio alle - 16:26:41
+fine: 16:28:53 
+
+Elaborazione dei file XML:  97%|████████████▌| 56/58 : OpenData_Aiuti_2024_05.xml dimensioni: 179
+16:28:53
+0 - 16:29:27
+inizio salvataggio alle - 16:29:59
+fine: 16:32:02 
+
+Elaborazione dei file XML:  98%|████████████▊| 57/58 : OpenData_Aiuti_2024_06.xml dimensioni: 157
+16:32:02
+0 - 16:32:30
+inizio salvataggio alle - 16:32:56
+fine: 16:34:52 
+
+Elaborazione dei file XML: 100%|█████████████| 58/58 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
