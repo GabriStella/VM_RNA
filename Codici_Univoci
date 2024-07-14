@@ -1,0 +1,72 @@
+import pandas as pd
+import csv
+import hashlib
+import json
+import datetime
+
+"""Incredibile hashlib.sha256 ci ha messo esattamente un'ora.. con 5 doppioni ognuno 2 
+    Mannaggia... MD5 ci mette comunque 25 minuti stesso numero di doppioni quindi top 
+    però ancora lento.. il problema sec me è la macchina
+
+    ez fact: i doppioni non sono comunque un problema perchè ho comunque implementato un 
+    sistema di gestione se dovessero capitare.
+"""
+def calculate_hash(row):
+    def serialize_floats(obj):
+        if isinstance(obj, float):
+            return '{:.6f}'.format(obj) 
+        return obj
+
+    serialized_row = json.dumps([serialize_floats(elem) for elem in row], separators=((',', ':')))
+
+    hash_object = hashlib.md5(serialized_row.encode())
+    return hash_object.hexdigest()
+
+i=0
+hash_list = []
+# csv_file_path=#"C:\\Users\\g.stella\\Desktop\\OpenData_Aiuti_2022_05.csv"
+curiosita=0
+csv_file_path= "N:\\035-DEMINIMIS\\02-CONVERSIONE_DATI\\CSV_GABRIELE_OK\\OpenData_Aiuti_2022_07.csv"
+Controllo=''
+count=1
+
+ora_corrente = datetime.datetime.now()
+print(ora_corrente.strftime("%H:%M:%S"))
+print(count)
+with open(csv_file_path, 'r', encoding='utf-8-sig') as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter='|', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    next(csv_reader) #!SALTIAMO L'INTESTAZIONE DOVE I NOMI COLONNE
+    ora_corrente = datetime.datetime.now()
+    print(f"Aperto alle: {ora_corrente.strftime("%H:%M:%S")}")
+    for row in csv_reader:
+        curiosita+=1
+        Codice_Univoco = calculate_hash(row)
+
+        if Codice_Univoco in hash_list:
+            count+=1
+            print(count)
+            if Controllo == Codice_Univoco:
+                Codice_Univoco = f"{Codice_Univoco}_{i}"
+                i+=1
+            else:
+                print(f"Prec: {i}")
+                i=1
+                Controllo=Codice_Univoco
+                robusto=f"{Codice_Univoco}_{i}"
+                while True: 
+                    if robusto in hash_list:
+                        print("Questo non dovrebbe succedere")
+                        i+=1
+                        robusto = f"{Codice_Univoco}_{i}"
+                    else:
+                        Codice_Univoco = f"{Codice_Univoco}_{i}"
+                        i+=1
+                        break
+
+        hash_list.append(Codice_Univoco)
+print(curiosita)
+ora_corrente = datetime.datetime.now()
+print(f"concluso CU: {ora_corrente.strftime("%H:%M:%S")}")
+df = pd.DataFrame(hash_list, columns=['Codice_Univoco'])
+print(i) 
+print("boh cose")
