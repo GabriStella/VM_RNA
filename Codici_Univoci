@@ -12,15 +12,10 @@ import datetime
     sistema di gestione se dovessero capitare.
 """
 def calculate_hash(row):
-    def serialize_floats(obj):
-        if isinstance(obj, float):
-            return '{:.6f}'.format(obj) 
-        return obj
-
-    serialized_row = json.dumps([serialize_floats(elem) for elem in row], separators=((',', ':')))
-
-    hash_object = hashlib.md5(serialized_row.encode())
+    data_string = '|'.join(map(str, row))
+    hash_object = hashlib.md5(data_string.encode())
     return hash_object.hexdigest()
+
 
 i=0
 hash_list = []
