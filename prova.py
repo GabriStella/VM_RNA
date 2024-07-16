@@ -7,8 +7,8 @@ import os
 import re
 from tqdm import tqdm
 
-xml_folder = "N:\\035-DEMINIMIS\\01-DOWNLOAD_DATI\\xml"   #  'N:\\035-DEMINIMIS\\01-DOWNLOAD_DATI\\'
-output_folder = "N:\\035-DEMINIMIS\\02-CONVERSIONE_DATI\\CSV_GABRIELE_OK"
+xml_folder = "N:\\035-DEMINIMIS\\01-DOWNLOAD_DATI\\xml 2014-2021 Q2"   #  'N:\\035-DEMINIMIS\\01-DOWNLOAD_DATI\\'
+output_folder = "N:\\035-DEMINIMIS\\02-CONVERSIONE_DATI\\CSV_GABRIELE_FINO A 2021Q2"
 
 
 
@@ -21,10 +21,10 @@ def remove_escapes(cell,column_name):
         return cell
 def read_processed_files():
     try:
-        with open('processed_files.txt', 'r') as f:
+        with open('processed_files_OLD.txt', 'r') as f:
             return f.read().splitlines()
     except FileNotFoundError:
-        open('processed_files.txt', 'a').close()
+        open('processed_files_OLD.txt', 'a').close()
         return []
 
 columns_to_keep = {
@@ -142,7 +142,7 @@ for filename in tqdm(os.listdir(xml_folder), desc="Elaborazione dei file XML"):
         df_cleaned.to_csv(output_file, sep='|', index=False, encoding='utf-8-sig')
         ora_corrente = datetime.datetime.now()
         print(f"fine: {ora_corrente.strftime("%H:%M:%S")} \n")
-        with open('processed_files.txt', 'a') as f:
+        with open('processed_files_OLD.txt', 'a') as f:
             f.write(filename + '\n')
 
 
