@@ -67,7 +67,7 @@ def process_block(block):
 def read_csv_in_blocks(file_path, block_size=150000):
     with open(file_path, 'r', encoding='utf-8-sig') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter='|', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        next(csv_reader)  # Salta l'intestazione
+        next(csv_reader)  
         block = []
         for index, row in enumerate(csv_reader):
             if index > 0 and index % block_size == 0:
@@ -114,12 +114,9 @@ def process_files(files, batch_size=150):
         else:
             row[i].append(hash[i])
 
-    # Inserimento dei dati nel database
     with ThreadPoolExecutor(max_workers=4) as executor:
-        # Crea e invia i batch di righe per l'inserimento
         futures = [executor.submit(insert_rows, batch, 'rna') for batch in process_batches(row, batch_size)]
         
-        # Attendi che tutti i lavori siano completati
         for future in futures:
             future.result()
 
