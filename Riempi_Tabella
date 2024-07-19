@@ -1,5 +1,6 @@
 import pandas as pd
-import pyodbc
+import mysql.connector
+from mysql.connector import pooling
 import csv
 import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -8,44 +9,56 @@ import collections
 import os
 import re
 
-def insert_row(row, table_name):
-    server = 'VDI-RNA\\SQLEXPRESS' 
-    database = 'RNA'
-    trusted_connection = 'yes'
-    driver = 'ODBC Driver 17 for SQL Server'  
+config = {
+    'user': 'root',
+    'host': 'localhost',
+    #'password': 'your_password',
+    'database': 'RNAuser',
+    'pool_name': 'mypool',
+    'pool_size': 5
+}
 
-    conn_str = f'DRIVER={driver};SERVER={server};DATABASE={database};Trusted_Connection={trusted_connection};'
-    t=0
-    while True:
-        try:
-            conn = pyodbc.connect(conn_str)
-            cursor = conn.cursor()
-            insert_query = f'''
-            INSERT INTO {table_name} (
-                [Identificativo Misura (CAR)], [Titolo Misura], [Tipo Misura], [Norma Misura], [COR], [Titolo Progetto], [Descrizione], 
-                [Data Concessione], [Cup], [Atto Concessione], [Denominazione Beneficiario], [C.F. Beneficiario], [Dimensione Beneficiario], 
-                [Regione], [Autorità Concedente], [Numero di riferimento della misura], [Identificativo componente], [Tipo procedimento], [Regolamento/Comunicazione], 
-                [Obiettivo], [Settore di attività], [Strumento di aiuto], [Codice Strumento], [Elemento di aiuto], [Importo Nominale], [Codice Univoco]
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-            '''
-            cursor.execute(insert_query, row)
-            conn.commit()
+pool = mysql.connector.pooling.MySQLConnectionPool(**config)
+
+def insert_rows(batch, table_name):
+    insert_query = f'''
+        INSERT INTO {table_name} (
+            `Identificativo Misura (CAR)`, `Titolo Misura`, `Tipo Misura`, `Norma Misura`, `COR`, `Titolo Progetto`, `Descrizione`, 
+            `Data Concessione`, `Cup`, `Atto Concessione`, `Denominazione Beneficiario`, `C.F. Beneficiario`, `Dimensione Beneficiario`, 
+            `Regione`, `Autorità Concedente`, `Numero di riferimento della misura`, `Identificativo componente`, `Tipo procedimento`, `Regolamento/Comunicazione`, 
+            `Obiettivo`, `Settore di attività`, `Strumento di aiuto`, `Codice Strumento`, `Elemento di aiuto`, `Importo Nominale`, `Codice Univoco`
+        )
+        VALUES (
+            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+        )
+    '''
+    
+    conn = None
+    cursor = None
+    try:
+        conn = pool.get_connection()
+        cursor = conn.cursor()
+        cursor.executemany(insert_query, batch)
+        conn.commit()
+    except mysql.connector.Error as e:
+        print(f"Error: {e}")
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
             conn.close()
-            break
-        except Exception as e:
-            t+=1
-            print(t)
+
+def process_batches(rows, batch_size=150):
+    for i in range(0, len(rows), batch_size):
+        yield rows[i:i + batch_size]
 
 def calculate_hash(row):
     data_string = '|'.join(map(str, row))
     hash_object = hashlib.md5(data_string.encode())
     return hash_object.hexdigest()
 
-
 def process_block(block):
-    hash_list_local=[]
-    i = 1
+    hash_list_local = []
     for row in block:
         Codice_Univoco = calculate_hash(row)
         hash_list_local.append((row, Codice_Univoco))
@@ -54,7 +67,7 @@ def process_block(block):
 def read_csv_in_blocks(file_path, block_size=150000):
     with open(file_path, 'r', encoding='utf-8-sig') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter='|', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        next(csv_reader)
+        next(csv_reader)  # Salta l'intestazione
         block = []
         for index, row in enumerate(csv_reader):
             if index > 0 and index % block_size == 0:
@@ -64,11 +77,11 @@ def read_csv_in_blocks(file_path, block_size=150000):
         if block:
             yield block
 
-def process_files(files):
+def process_files(files, batch_size=150):
     hash_list = []
     element_counters = collections.defaultdict(int)
     start_time = datetime.datetime.now()
-    print(f"Inizio: {start_time.strftime('%H:%M:%S')}")
+    print(f"    Inizio: {start_time.strftime('%H:%M:%S')}")
 
     with ThreadPoolExecutor(max_workers=4) as executor:
         futures = []
@@ -84,14 +97,14 @@ def process_files(files):
     end_time = datetime.datetime.now()
     print(f"    Finito: {end_time.strftime('%H:%M:%S')}")
     print(f"    Righe Tot: {len(hash_list)}")
-    hash=[tup[-1] for tup in hash_list]
+    
+    hash = [tup[-1] for tup in hash_list]
     counter = collections.Counter(hash)
-    row=[tup[0] for tup in hash_list]
+    row = [tup[0] for tup in hash_list]
     modified_hash_list = []
     element_counters = collections.defaultdict(int)
 
     for i in range(len(row)):
-
         if counter[hash[i]] > 1:
             element_counters[hash[i]] += 1
             if element_counters[hash[i]] == 1:
@@ -100,15 +113,15 @@ def process_files(files):
                 row[i].append(f"{hash[i]}_{element_counters[hash[i]]}")
         else:
             row[i].append(hash[i])
+
+    # Inserimento dei dati nel database
     with ThreadPoolExecutor(max_workers=4) as executor:
-        futures = [executor.submit(insert_row, dato, "Open_Data") for dato in row]#.itertuples(index=False, name=None)]
-
-
-    for future in futures:
-        future.result()
+        # Crea e invia i batch di righe per l'inserimento
+        futures = [executor.submit(insert_rows, batch, 'rna') for batch in process_batches(row, batch_size)]
         
-
-
+        # Attendi che tutti i lavori siano completati
+        for future in futures:
+            future.result()
 
 def main():
     folder_path = "N:\\035-DEMINIMIS\\02-CONVERSIONE_DATI\\CSV_GABRIELE_OK"  
@@ -123,9 +136,8 @@ def main():
             files_by_month[(year, month)].append(os.path.join(folder_path, filename))
 
     for (year, month), files in sorted(files_by_month.items()):
-        print(f"    Mese : {year}-{month}")
-        modified_hash_list = process_files(files)
+        print(f"Mese : {year}-{month}")
+        process_files(files, batch_size=150)
 
 if __name__ == "__main__":
     main()
-
