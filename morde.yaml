@@ -1,0 +1,74 @@
+cookie:
+  expiry_days: 30
+  key: some_signature_key
+  name: some_cookie_name
+credentials:
+  usernames:
+    albi:
+      email: Alberti@al.com
+      logged_in: false
+      name: Alberto
+      password: $2b$12$u8YVA2alfNZMK8gXImj00uvKZPsiJXqQeEn5Wex1vkrWU/0FpDQXO
+    dbaldwin:
+      email: dbaldwin@gmail.com
+      failed_login_attempts: 0
+      logged_in: false
+      name: David Baldwin
+      password: $2b$12$E9/bCaN/r8sN/FV2l8NpgOgspUBAp7UAVU6BgsXJzp/pW8gQWCprC
+    gab:
+      email: g.stella@cdr-italia.com
+      failed_login_attempts: 0
+      logged_in: false
+      name: Gabriele il Magnifico
+      password: $2b$12$AiRd6Wb8jUG7HXezDNhSrO30VJ0LigHH39MLiIlob5nvc53dshvUi
+    gabrii:
+      email: Gabri@gmail.com
+      failed_login_attempts: 1
+      logged_in: false
+      name: Gabri
+      password: $2b$12$VdMos4uLnOYxwI/v968q1uulBwWJPGisRavlzmfLjS/nPJS3Iw3Pm
+    jsmith:
+      email: jsmith@gmail.com
+      failed_login_attempts: 0
+      logged_in: true
+      name: John Smith
+      password: $2b$12$iWlVOac3uujRvTrXDi6wructXftKmo/GyQd6SMu5FmyX306kH.yFO
+    lmattia:
+      email: Luisi@gmail.com
+      failed_login_attempts: 0
+      logged_in: false
+      name: matt
+      password: $2b$12$LwcJ6t2GBDja6KgTCzEf6uCUHXwFuJh88ngVD0M5AmYrTIUmyrRNe
+    lmattia45:
+      email: melsby@gmail.com
+      failed_login_attempts: 0
+      logged_in: false
+      name: matt
+      password: $2b$12$RLnm/D6/jmvaFPS5bVjmxOcHwJksCFWKegHV32cUWV5MUK5tVcL4S
+    proviamo:
+      email: PROVA@gmail.com
+      failed_login_attempts: 0
+      logged_in: false
+      name: PROVAAAAA
+      password: $2b$12$2TS3h5hEwuWn52As5F7oDO70C3CE41OzHNRxFIEJ8LnNwiyN9Hrwu
+    rbriggs:
+      email: rbriggs@gmail.com
+      failed_login_attempts: 0
+      logged_in: false
+      name: Rebecca Briggs
+      password: $2b$12$QUaqHTUihw.AsLWD4x3e4OJLA9nZYJzSRWz2FV5dKXiybdgTWrHNO
+    rcouper:
+      email: rcouper@gmail.com
+      failed_login_attempts: 0
+      logged_in: false
+      name: Ross Couper
+      password: $2b$12$Tir/PbHVmmnt5kgNxgOwMuxNIb2fv2pJ.q71TW8ekvbugCqkye4yu
+    wdewe:
+      email: wedw@ew.com
+      failed_login_attempts: 0
+      logged_in: false
+      name: dwew
+      password: $2b$12$QJBPc7PxaTTBVJ.3cl4KlOPPqYCWVfaHqkk2IsoGDExXhihKZLDgy
+pre-authorized:
+  emails:
+  - melsby@gmail.com
