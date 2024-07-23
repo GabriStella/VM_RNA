@@ -4,103 +4,25 @@ import uuid
 from datetime import date, timedelta
 from streamlit.logger import get_logger
 import warnings
-import streamlit_authenticator as stauth
-from streamlit_authenticator import Authenticate
-from streamlit_authenticator.utilities.exceptions import (CredentialsError,
-                                                          ForgotError,
-                                                          LoginError,
-                                                          RegisterError,
-                                                          ResetError,
-                                                          UpdateError)
-import yaml 
-from yaml.loader import SafeLoader
-from email import *
 
-from typing import Callable
-config_filename = 'morde.yaml'
-with open(config_filename, 'r', encoding='utf-8') as file:
-    config = yaml.load(file, Loader=SafeLoader)
 
-authenticator = stauth.Authenticate(
-    config['credentials'],
-    config['cookie']['name'],
-    config['cookie']['key'],
-    config['cookie']['expiry_days'],
-    config['pre-authorized']
-)
-def add_session_state_change(original_function: Callable):
-    def wrapper(self, *args, **kwargs):
-        # Chiama la funzione originale
-        result = original_function(self, *args, **kwargs)
-        
-        # Modifica lo stato della sessione
-        if 'stPage' not in st.session_state:
-            st.session_state['stPage'] = None
-        st.session_state["stPage"] = "SI"
-        
-        return result
-    return wrapper
 
-authenticator.logout = add_session_state_change(authenticator.logout)
-logger = get_logger(__name__)
 warnings.filterwarnings("ignore", category=FutureWarning, module="pandas")
 
 def app():
-    if st.session_state["stPage"] == "SI":
-        if st.session_state["Init"] == "Login": 
-            try:
-                authenticator.login()
-            except LoginError as e:
-                st.error(e)
-            if st.session_state["authentication_status"] is False:
-                st.error('Username/password is incorrect')
-            elif st.session_state["authentication_status"] is None:
-                st.warning('Please enter your username and password')
-        if st.session_state["Init"] == "Registrati":
-            try:
-                email_of_registered_user, username_of_registered_user, name_of_registered_user = authenticator.register_user(pre_authorization=False)
-                if email_of_registered_user:
-                    st.success(f'User {email_of_registered_user} registered successfully')
-                    with open(config_filename, 'w', encoding='utf-8') as file:
-                        yaml.dump(config, file, default_flow_style=False)
-            except RegisterError as e:
-                st.error(e)
-        if st.session_state["Init"] == "PW_Dim":
-            try:
-                (username_of_forgotten_password,
-                    email_of_forgotten_password,
-                    new_random_password) = authenticator.forgot_password()
-                if username_of_forgotten_password:
-                    st.success('New password sent securely')
-                    # send_email(email_of_forgotten_password, 'Nuova Password', new_random_password)
-                    with open(config_filename, 'w', encoding='utf-8') as file:
-                        yaml.dump(config, file, default_flow_style=False)
-                elif not username_of_forgotten_password:
-                    st.error('Username not found')
-            except ForgotError as e:
-                st.error(e)
-        if st.button("Registrati"):
-            st.session_state["Init"] = "Registrati"        
-        if st.button("Login"):
-            st.session_state["Init"] = "Login"
-        if st.button("Password Dimenticata"):
-            st.session_state["Init"] = "PW_Dim"   
-    if st.session_state["authentication_status"]:
-        st.session_state["stPage"] = "NO"
-        st.subheader(f"Benvenuto *{st.session_state['name']}*")
 
-        authenticator.logout()
 
     # logger.info('Hello world')
-        if 'cliente' not in st.session_state:
-            UUID=str(uuid.uuid4())
-            st.session_state.cliente = UUID
-        UUID = st.session_state.cliente
+    if 'cliente' not in st.session_state:
+        UUID=str(uuid.uuid4())
+        st.session_state.cliente = UUID
+    UUID = st.session_state.cliente
 
+    
+    aa = st.sidebar.radio("Seleziona il tipo di tool di cui hai bisogno", ["DE MINIMIS","Ricerca Avanzata"], key=f"choosed_mood_{UUID}")
+    if aa== "DE MINIMIS" :
         st.title("Compila DeMinimis")
-
-        # CF 
-        cf_input= st.text_input("Codice Fiscale : ",key=f"get_cf_{UUID}")
+        cf_input= st.text_input("Codice Fiscale : ", key=f"get_cf_{UUID}")
         CFS={}
         if 'cf_input_value' not in st.session_state:
             
@@ -228,15 +150,25 @@ def app():
                                         mime='application/xlsx')
             except Exception as e:
                 st.error(f"Sembra che il codice Fiscale inserito non sia corretto... {e}")
+    elif aa== "Ricerca Avanzata" :
+        st.title("Consulta RNA")
+        PARAMETRI = st.sidebar.multiselect("Parametri di ricerca", ["CAR", "TITOLO MISURA",  "COR", "DESCRIZIONE", "DATA CONCESSIONE", "CUP", "DENOMINAZIONE", "CF", "REGIONE", "AUTORITA CONCEDENTE", "Numero di riferimento della misura", "TIPO PROCEDIMENTO", "Regolamento/Comunicazione", "Settore di attività"], key=f"choosed_param_{UUID}")
+        richieste={}
+        for param in PARAMETRI:
+            input = st.text_input(f" {param} :",key=f"get_{param}_{UUID}")
+            richieste[f"{param}"]=input
 
-    # except Exception as e:
-    #     st.error(f"Inserire nel Box il numero delle collegate, grazie. {e}")
+    else:
+        st.write("Mancata Selezione tool")
+    # CF 
+
+
+# except Exception as e:
+#     st.error(f"Inserire nel Box il numero delle collegate, grazie. {e}")
 
 
 def main():
-    if "Init" not in st.session_state:
-        st.session_state["Init"] = "Login"
-        st.session_state["stPage"] = "SI"
+
     app()
 
 
@@ -254,11 +186,7 @@ if __name__ == '__main__':
 
 
 
-
-
-
-
-
+    
 
 
 

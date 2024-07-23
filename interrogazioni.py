@@ -15,7 +15,6 @@ def Ask_CF(CFS):
         'database': 'RNAuser'
     }
 
-    # Costruzione della query
     base_query = "SELECT * FROM `rna` WHERE 1=1"
     query_params = []
     
@@ -30,7 +29,6 @@ def Ask_CF(CFS):
     else:
         return None
 
-    # Connessione al database e esecuzione della query
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
 
@@ -38,18 +36,15 @@ def Ask_CF(CFS):
         cursor.execute(base_query, query_params)
         rows = cursor.fetchall()
 
-        # Ottenere i nomi delle colonne
         columns = [column[0] for column in cursor.description]
 
-        # Creare un DataFrame Pandas
         df = pd.DataFrame.from_records(rows, columns=columns)
     finally:
-        # Chiudere il cursore e la connessione
-        cursor.close()
-        conn.close()
+        if conn.is_connected():
+            cursor.close()
+            conn.close()
 
     return df
-
 
 
 def CREA_DF(AMBITO):
@@ -94,7 +89,6 @@ def COMPILA_EXCEL_agr(ambito):
         with open(doc_path, "rb") as f:
             doc_contents = f.read()
         return doc_contents
-
 
 def COMPILA_EXCEL_pes(ambito):
 
@@ -151,3 +145,35 @@ def COMPILA_EXCEL_gen(ambito):
         with open(doc_path, "rb") as f:
             doc_contents = f.read()
         return doc_contents
+
+def ricerca_avanzata(parametro): 
+    config = {
+        'user': 'root',
+        'host': 'localhost',
+        'database': 'RNAuser'
+    }
+
+    base = "SELECT * FROM `rna` WHERE 1=1 "
+    ricerca = []
+    for key in parametro:
+        if parametro[key] != "":
+            base += f"AND `{key}` = %s "
+            ricerca.append(parametro[key])
+    try:
+        connection = mysql.connector.connect(**config)
+        cursor = connection.cursor(dictionary=True)
+        
+        cursor.execute(base, ricerca)
+        result = cursor.fetchall()
+        columns = [column[0] for column in cursor.description]
+        df = pd.DataFrame.from_records(result, columns=columns)
+        return df
+    except mysql.connector.Error as err:
+        print(f"Errore: {err}")
+        return None
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+        
+    
