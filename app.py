@@ -1,7 +1,7 @@
 import streamlit as st
 from interrogazioni import *
 import uuid
-from datetime import date, timedelta
+from datetime import date, datetime
 from streamlit.logger import get_logger
 import warnings
 
@@ -154,10 +154,44 @@ def app():
         st.title("Consulta RNA")
         PARAMETRI = st.sidebar.multiselect("Parametri di ricerca", ["CAR", "TITOLO MISURA",  "COR", "DESCRIZIONE", "DATA CONCESSIONE", "CUP", "DENOMINAZIONE", "CF", "REGIONE", "AUTORITA CONCEDENTE", "Numero di riferimento della misura", "TIPO PROCEDIMENTO", "Regolamento/Comunicazione", "Settore di attività"], key=f"choosed_param_{UUID}")
         richieste={}
+        if "DATA CONCESSIONE" in PARAMETRI: 
+            DATA=st.sidebar.radio("Data Concessione",["Intervallo di date", "Data Specifica", "Successiva a ", "Precedente a "], key=f"Spec_Data_{UUID}")
         for param in PARAMETRI:
-            input = st.text_input(f" {param} :",key=f"get_{param}_{UUID}")
-            richieste[f"{param}"]=input
-
+            if param=="DATA CONCESSIONE": 
+                if DATA ==  "Intervallo di date":
+                    st.write(f"<div style='text-align: center;'>{param}</div>", unsafe_allow_html=True)
+                    col1, col2 = st.columns(2,vertical_alignment= 'center') 
+                    with col1:
+                        input1 = st.date_input("Da", datetime(2022, 1, 1),key=f"Datastart_{UUID}")
+                    with col2:
+                        input2 = st.date_input("A", datetime(2024, 1, 1),key=f"Dataend_{UUID}")
+                    richieste["Data_Start"]=input1
+                    richieste["Data_End"]=input2
+                elif DATA ==  "Successiva a ":
+                    
+                    input = st.date_input(f" {param} :", datetime(2024, 1, 1),key=f"get_{param}_{UUID}")
+                    st.caption("La ricerca restituirà gli aiuti successivi alla data inserita")
+                    richieste[f"{DATA}"]=input
+                elif DATA ==  "Precedente a ":
+                    input = st.date_input(f" {param} :", datetime(2024, 1, 1),key=f"get_{param}_{UUID}")
+                    richieste[f"{DATA}"]=input
+                else:  #! DATA SPECIFICA
+                    input = st.date_input(f" {param} :", datetime(2024, 1, 1),key=f"get_{param}_{UUID}")
+                    richieste[f"{param}"]=input
+      
+            else:
+                input = st.text_input(f" {param} :",key=f"get_{param}_{UUID}")
+                richieste[f"{param}"]=input
+        if st.button("Esegui Ricerca"):
+            try:
+                ppp=ricerca_avanzata(richieste)
+                # st.write(NUOVO)
+                st.dataframe(ppp, use_container_width=True)
+            except: 
+                st.error("stg went wrong")
+        
+        # st.write(richieste)
+        # st.write(ppp)
     else:
         st.write("Mancata Selezione tool")
     # CF 

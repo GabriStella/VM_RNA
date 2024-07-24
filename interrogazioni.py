@@ -157,8 +157,13 @@ def ricerca_avanzata(parametro):
     ricerca = []
     for key in parametro:
         if parametro[key] != "":
+            if key == "Data_Start":
+                base += f"AND `DATA CONCESSIONE` > %s "
             base += f"AND `{key}` = %s "
             ricerca.append(parametro[key])
+            #return base, ricerca
+    # query = base % tuple(f"'{p}'" if isinstance(p, str) else p for p in ricerca)
+    # return query
     try:
         connection = mysql.connector.connect(**config)
         cursor = connection.cursor(dictionary=True)
