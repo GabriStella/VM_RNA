@@ -9,10 +9,11 @@ import collections
 import os
 import re
 
+
 config = {
-    'user': 'root',
+    'user': 'RNAuser',
+    'password': '7RKlo1StosGVSCnx',
     'host': 'localhost',
-    #'password': 'your_password',
     'database': 'RNAuser',
     'pool_name': 'mypool',
     'pool_size': 5
@@ -114,8 +115,19 @@ def process_files(files, batch_size=150):
         else:
             row[i].append(hash[i])
 
+    datetime_column_index = 7
+    for linea in row:
+
+        original_datetime_str = linea[datetime_column_index]
+        parsed_datetime = datetime.datetime.strptime(original_datetime_str, '%d-%m-%Y')
+        
+        mysql_formatted_datetime = parsed_datetime.strftime('%Y-%m-%d')
+        
+  
+        linea[datetime_column_index] = mysql_formatted_datetime
+
     with ThreadPoolExecutor(max_workers=4) as executor:
-        futures = [executor.submit(insert_rows, batch, 'rna') for batch in process_batches(row, batch_size)]
+        futures = [executor.submit(insert_rows, batch, 'Aiuti_Individuali') for batch in process_batches(row, batch_size)]
         
         for future in futures:
             future.result()

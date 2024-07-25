@@ -13,9 +13,10 @@ conn = mysql.connector.connect(**config)
 cursor = conn.cursor()
 
 
-table_name = 'RNA_TAB'
+table_name = 'Aiuti_Individuali'
 create_table_query = '''
-    CREATE TABLE RNA (
+    CREATE TABLE Aiuti_Individuali (
+        id INT AUTO_INCREMENT PRIMARY KEY,
         `Identificativo Misura (CAR)` VARCHAR(255),
         `Titolo Misura` VARCHAR(1000),
         `Tipo Misura` VARCHAR(255),
@@ -23,7 +24,7 @@ create_table_query = '''
         `COR` INT,
         `Titolo Progetto` VARCHAR(1000),
         `Descrizione` TEXT,
-        `Data Concessione` VARCHAR(100),
+        `Data Concessione` DATE,
         `Cup` VARCHAR(255),
         `Atto Concessione` VARCHAR(1000),
         `Denominazione Beneficiario` VARCHAR(1000),
