@@ -15,7 +15,7 @@ def Ask_CF(CFS):
         'database': 'RNAuser'
     }
 
-    base_query = "SELECT * FROM `rna` WHERE 1=1"
+    base_query = "SELECT * FROM `aiuti_individuali` WHERE 1=1"
     query_params = []
     
     if len(CFS) == 1:
@@ -153,32 +153,44 @@ def ricerca_avanzata(parametro):
         'database': 'RNAuser'
     }
 
-    base = "SELECT * FROM `rna` WHERE 1=1 "
+    base = "SELECT * FROM `aiuti_individuali` WHERE 1=1 "
     ricerca = []
     for key in parametro:
         if parametro[key] != "":
             if key == "Data_Start":
                 base += f"AND `DATA CONCESSIONE` > %s "
-            base += f"AND `{key}` = %s "
+            base += f"AND `{key}` LIKE %s "
             ricerca.append(parametro[key])
             #return base, ricerca
     # query = base % tuple(f"'{p}'" if isinstance(p, str) else p for p in ricerca)
     # return query
-    try:
-        connection = mysql.connector.connect(**config)
-        cursor = connection.cursor(dictionary=True)
-        
-        cursor.execute(base, ricerca)
-        result = cursor.fetchall()
-        columns = [column[0] for column in cursor.description]
-        df = pd.DataFrame.from_records(result, columns=columns)
-        return df
-    except mysql.connector.Error as err:
-        print(f"Errore: {err}")
+    if base != "SELECT * FROM `aiuti_individuali` WHERE 1=1 ":
+        try:
+            connection = mysql.connector.connect(**config)
+            cursor = connection.cursor(dictionary=True)
+            
+            cursor.execute(base, ricerca)
+            result = cursor.fetchall()
+            columns = [column[0] for column in cursor.description]
+            df = pd.DataFrame.from_records(result, columns=columns)
+            return df
+        except mysql.connector.Error as err:
+            print(f"Errore: {err}")
+            return None
+        finally:
+            if connection.is_connected():
+                cursor.close()
+                connection.close()
+    else: 
         return None
-    finally:
-        if connection.is_connected():
-            cursor.close()
-            connection.close()
         
+def Excel_avanzato(valori):
     
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp_file:
+        valori.to_excel(tmp_file.name, index=False, engine='openpyxl')
+        
+        temp_file_path = tmp_file.name
+        with open(temp_file_path, 'rb') as f:
+            excel_data = f.read()
+
+        return excel_data

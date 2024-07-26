@@ -4,10 +4,10 @@ import uuid
 from datetime import date, datetime
 from streamlit.logger import get_logger
 import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
+import pandas as pd
 
 
-
-warnings.filterwarnings("ignore", category=FutureWarning, module="pandas")
 
 def app():
 
@@ -19,8 +19,8 @@ def app():
     UUID = st.session_state.cliente
 
     
-    aa = st.sidebar.radio("Seleziona il tipo di tool di cui hai bisogno", ["DE MINIMIS","Ricerca Avanzata"], key=f"choosed_mood_{UUID}")
-    if aa== "DE MINIMIS" :
+    aa = st.sidebar.radio("Seleziona il tipo di tool di cui hai bisogno", ["De Minimis","Ricerca Avanzata"], key=f"choosed_mood_{UUID}")
+    if aa== "De Minimis" :
         st.title("Compila DeMinimis")
         cf_input= st.text_input("Codice Fiscale : ", key=f"get_cf_{UUID}")
         CFS={}
@@ -99,7 +99,10 @@ def app():
             try:
                 CF_Result=Ask_CF(CFS)
                 # st.write(NUOVO)
-                st.dataframe(CF_Result, use_container_width=True)
+                
+                Visualizzazione= ["Identificativo Misura (CAR)", "Numero di riferimento della misura", "Titolo Misura", "Tipo Misura", "COR", "Titolo Progetto", "Data Concessione", "Denominazione Beneficiario", "C.F. Beneficiario", "Regione", "Elemento di aiuto"]
+                df_visualizzato = CF_Result[Visualizzazione]
+                st.dataframe(df_visualizzato, use_container_width=True)
                 GENERALE = pd.DataFrame(columns=CF_Result.columns)
                 AGRICOLTURA = pd.DataFrame(columns=CF_Result.columns)
                 PESCA = pd.DataFrame(columns=CF_Result.columns)
@@ -152,12 +155,15 @@ def app():
                 st.error(f"Sembra che il codice Fiscale inserito non sia corretto... {e}")
     elif aa== "Ricerca Avanzata" :
         st.title("Consulta RNA")
-        PARAMETRI = st.sidebar.multiselect("Parametri di ricerca", ["CAR", "TITOLO MISURA",  "COR", "DESCRIZIONE", "DATA CONCESSIONE", "CUP", "DENOMINAZIONE", "CF", "REGIONE", "AUTORITA CONCEDENTE", "Numero di riferimento della misura", "TIPO PROCEDIMENTO", "Regolamento/Comunicazione", "Settore di attività"], key=f"choosed_param_{UUID}")
+        st.caption("Non è ancora consigliato usare questa pagina, non dovrebbe creare grossi problemi, ma potrebbe restituire degli errori perchè bisogna ancora sistemare un paio di cose in SQL")
+        oggi = date.today()
+        oggi_formato = oggi.strftime("%d-%m-%Y")
+        PARAMETRI = st.sidebar.multiselect("Parametri di ricerca", ["Identificativo Misura (CAR)", "Titolo Misura",  "COR", "Descrizione", "Data Concessione", "CUP", "Denominazione", "C.F. Beneficiario", "Regione", "Autorita Concedente", "Numero di riferimento della misura", "Tipo Procedimento", "Regolamento/Comunicazione", "Settore di attività"], key=f"choosed_param_{UUID}")
         richieste={}
-        if "DATA CONCESSIONE" in PARAMETRI: 
+        if "Data Concessione" in PARAMETRI: 
             DATA=st.sidebar.radio("Data Concessione",["Intervallo di date", "Data Specifica", "Successiva a ", "Precedente a "], key=f"Spec_Data_{UUID}")
         for param in PARAMETRI:
-            if param=="DATA CONCESSIONE": 
+            if param=="Data Concessione": 
                 if DATA ==  "Intervallo di date":
                     st.write(f"<div style='text-align: center;'>{param}</div>", unsafe_allow_html=True)
                     col1, col2 = st.columns(2,vertical_alignment= 'center') 
@@ -168,9 +174,9 @@ def app():
                     richieste["Data_Start"]=input1
                     richieste["Data_End"]=input2
                 elif DATA ==  "Successiva a ":
-                    
+                
                     input = st.date_input(f" {param} :", datetime(2024, 1, 1),key=f"get_{param}_{UUID}")
-                    st.caption("La ricerca restituirà gli aiuti successivi alla data inserita")
+                    st.caption("La ricerca restituirà gli aiuti successivi alla data inserita \n l'exel scaricabile a fine caricamento sarà invece completo se le righe sono meo di 1 milione.")
                     richieste[f"{DATA}"]=input
                 elif DATA ==  "Precedente a ":
                     input = st.date_input(f" {param} :", datetime(2024, 1, 1),key=f"get_{param}_{UUID}")
@@ -182,13 +188,31 @@ def app():
             else:
                 input = st.text_input(f" {param} :",key=f"get_{param}_{UUID}")
                 richieste[f"{param}"]=input
-        if st.button("Esegui Ricerca"):
-            try:
-                ppp=ricerca_avanzata(richieste)
-                # st.write(NUOVO)
-                st.dataframe(ppp, use_container_width=True)
-            except: 
-                st.error("stg went wrong")
+        if PARAMETRI != []: 
+            if st.button("Esegui Ricerca"):
+                try:
+                    ppp=ricerca_avanzata(richieste)
+                    # st.write(richieste)
+                    if len(ppp) > 50:
+                        st.warning(f"La tabella contiene {len(ppp)} righe, sono mostrate solo le prime 50")
+                        df_ridotto = ppp.iloc[:50]
+                        st.write(len(ppp))
+                    else:
+                        df_ridotto = ppp
+                        st.write("TUTTO")
+                    Visualizzazione= ["Identificativo Misura (CAR)", "Numero di riferimento della misura", "Titolo Misura", "Tipo Misura", "COR", "Titolo Progetto", "Data Concessione", "Denominazione Beneficiario", "C.F. Beneficiario", "Regione", "Elemento di aiuto"]
+                    df_visualizzato = df_ridotto[Visualizzazione]
+                    st.dataframe(df_visualizzato, use_container_width=True)
+                    excel=Excel_avanzato(ppp)
+
+                    st.download_button(label='Download Riepilogo Ricerca', 
+                                    data=excel,
+                                    file_name=f"Ricerca_Avanzata_{oggi_formato}.xlsx",
+                                    mime='application/xlsx')
+                except Exception as e: 
+                    st.error(f"stg went wrong, cosa? ->  {e}")
+        else: 
+            st.warning("**Selezionare almeno un parametro di ricerca per procedere**")
         
         # st.write(richieste)
         # st.write(ppp)
