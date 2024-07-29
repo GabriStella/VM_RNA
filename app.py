@@ -1,7 +1,7 @@
 import streamlit as st
 from interrogazioni import *
 import uuid
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from streamlit.logger import get_logger
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -22,11 +22,13 @@ def app():
     aa = st.sidebar.radio("Seleziona il tipo di tool di cui hai bisogno", ["De Minimis","Ricerca Avanzata"], key=f"choosed_mood_{UUID}")
     if aa== "De Minimis" :
         st.title("Compila DeMinimis")
+        # if "Generale" in st.session_state: 
+        #     den_value, somma_importi_Generale = st.session_state["Generale"]
+        #     st.success(f"{den_value}, {somma_importi_Generale}")
+        
         cf_input= st.text_input("Codice Fiscale : ", key=f"get_cf_{UUID}")
         CFS={}
         if 'cf_input_value' not in st.session_state:
-            
-
             st.session_state.cf_input_value = ""
 
         CFS["CF_1"]=cf_input
@@ -100,24 +102,41 @@ def app():
                 CF_Result=Ask_CF(CFS)
                 # st.write(NUOVO)
                 
-                Visualizzazione= ["Identificativo Misura (CAR)", "Numero di riferimento della misura", "Titolo Misura", "Tipo Misura", "COR", "Titolo Progetto", "Data Concessione", "Denominazione Beneficiario", "C.F. Beneficiario", "Regione", "Elemento di aiuto"]
-                df_visualizzato = CF_Result[Visualizzazione]
+                # Visualizzazione= ["Identificativo Misura (CAR)", "Numero di riferimento della misura", "Titolo Misura", "Tipo Misura", "COR", "Titolo Progetto", "Data Concessione", "Denominazione Beneficiario", "C.F. Beneficiario", "Regione", "Regolamento/Comunicazione", "Elemento di aiuto"]
+                # df_visualizzato = CF_Result[Visualizzazione]
+                df_visualizzato = CF_Result.drop(columns=['id'])
                 st.dataframe(df_visualizzato, use_container_width=True)
-                GENERALE = pd.DataFrame(columns=CF_Result.columns)
-                AGRICOLTURA = pd.DataFrame(columns=CF_Result.columns)
-                PESCA = pd.DataFrame(columns=CF_Result.columns)
-                den_value = CF_Result.loc[CF_Result['C.F. Beneficiario'] == CFS["CF_1"], 'Denominazione Beneficiario'].iloc[0]
+                GENERALE = pd.DataFrame(columns=df_visualizzato.columns)
+                AGRICOLTURA = pd.DataFrame(columns=df_visualizzato.columns)
+                PESCA = pd.DataFrame(columns=df_visualizzato.columns)
+                den_value = df_visualizzato.loc[df_visualizzato['C.F. Beneficiario'] == CFS["CF_1"], 'Denominazione Beneficiario'].iloc[0]
                 st.write(den_value)
-                for index, row in CF_Result.iterrows():
-                    if "2831" in row["Regolamento/Comunicazione"] :#or "1407" in row["Regolamento/Comunicazione"]:     
+                for index, row in df_visualizzato.iterrows():
+                    if "De Minimis" in row["Tipo procedimento"]:
                         GENERALE= pd.concat([GENERALE, pd.DataFrame([row])], ignore_index=True)
-                    elif "1407" in row["Regolamento/Comunicazione"]:
-                        GENERALE= pd.concat([GENERALE, pd.DataFrame([row])], ignore_index=True)
+                    # if "2831" in row["Regolamento/Comunicazione"] :#or "1407" in row["Regolamento/Comunicazione"]:     
+                    #     GENERALE= pd.concat([GENERALE, pd.DataFrame([row])], ignore_index=True)
+                    # elif "1407" in row["Regolamento/Comunicazione"]:
+                    #     GENERALE= pd.concat([GENERALE, pd.DataFrame([row])], ignore_index=True)
                     elif "1408" in row["Regolamento/Comunicazione"]:
                         AGRICOLTURA= pd.concat([AGRICOLTURA, pd.DataFrame([row])], ignore_index=True)
                     elif "717"  in row["Regolamento/Comunicazione"]: 
                         PESCA= pd.concat([PESCA, pd.DataFrame([row])], ignore_index=True)
+                
+                
 
+                GENERALE['Data Concessione'] = pd.to_datetime(GENERALE['Data Concessione'])
+                data_limite = datetime.now() - timedelta(days=3*365)
+                df_filtro = GENERALE[GENERALE['Data Concessione'] >= data_limite]
+                somma_importi_Generale = df_filtro['Elemento di aiuto'].sum()
+                netto= 300000 - somma_importi_Generale
+                # st.session_statef"Generale"] = somma_importi_Generale , den_value
+                if netto > 0 :  
+                    st.success(f"L'azienda {den_value} ha ancora a disposizione **{netto} €** in De Minimis")
+                elif netto < 0 : 
+                    st.warning("Sembrerebbe che l'azienda ha una capienza negativa in questo momento ..")
+                elif netto == 0: 
+                    st.warning("Esattamente zero euro disponibili 🫢")
 
 
                 col1, col2, col3 = st.columns(3)
@@ -126,6 +145,7 @@ def app():
                     excel1=COMPILA_EXCEL_gen(GENERALE)
                     oggi = date.today()
                     oggi_formato = oggi.strftime("%d-%m-%Y")
+                    
                     with col1:
                             st.download_button(label='Download Excel - GENERALE', 
                                             data=excel1,
@@ -155,9 +175,9 @@ def app():
                 st.error(f"Sembra che il codice Fiscale inserito non sia corretto... {e}")
     elif aa== "Ricerca Avanzata" :
         st.title("Consulta RNA")
-        st.caption("Non è ancora consigliato usare questa pagina, non dovrebbe creare grossi problemi, ma potrebbe restituire degli errori perchè bisogna ancora sistemare un paio di cose in SQL")
+        # st.caption("Non è ancora consigliato usare questa pagina, non dovrebbe creare grossi problemi, ma potrebbe restituire degli errori perchè bisogna ancora sistemare un paio di cose in SQL")
         oggi = date.today()
-        oggi_formato = oggi.strftime("%d-%m-%Y")
+        oggi_formato = oggi.strftime("%Y-%m-%d")
         PARAMETRI = st.sidebar.multiselect("Parametri di ricerca", ["Identificativo Misura (CAR)", "Titolo Misura",  "COR", "Descrizione", "Data Concessione", "CUP", "Denominazione", "C.F. Beneficiario", "Regione", "Autorita Concedente", "Numero di riferimento della misura", "Tipo Procedimento", "Regolamento/Comunicazione", "Settore di attività"], key=f"choosed_param_{UUID}")
         richieste={}
         if "Data Concessione" in PARAMETRI: 
@@ -171,18 +191,21 @@ def app():
                         input1 = st.date_input("Da", datetime(2022, 1, 1),key=f"Datastart_{UUID}")
                     with col2:
                         input2 = st.date_input("A", datetime(2024, 1, 1),key=f"Dataend_{UUID}")
+                    st.caption("La ricerca restituirà gli aiuti nel Range di date inserite")
                     richieste["Data_Start"]=input1
                     richieste["Data_End"]=input2
                 elif DATA ==  "Successiva a ":
                 
                     input = st.date_input(f" {param} :", datetime(2024, 1, 1),key=f"get_{param}_{UUID}")
-                    st.caption("La ricerca restituirà gli aiuti successivi alla data inserita \n l'exel scaricabile a fine caricamento sarà invece completo se le righe sono meo di 1 milione.")
-                    richieste[f"{DATA}"]=input
+                    st.caption("La ricerca restituirà gli aiuti successivi alla data inserita")
+                    richieste["Data_Start"]=input
                 elif DATA ==  "Precedente a ":
                     input = st.date_input(f" {param} :", datetime(2024, 1, 1),key=f"get_{param}_{UUID}")
-                    richieste[f"{DATA}"]=input
+                    st.caption("La ricerca restituirà gli aiuti precedenti alla data inserita")
+                    richieste["Data_End"]=input
                 else:  #! DATA SPECIFICA
                     input = st.date_input(f" {param} :", datetime(2024, 1, 1),key=f"get_{param}_{UUID}")
+                    st.caption("La ricerca restituirà gli aiuti nella data inserita")
                     richieste[f"{param}"]=input
       
             else:

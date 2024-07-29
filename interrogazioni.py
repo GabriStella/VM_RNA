@@ -159,7 +159,10 @@ def ricerca_avanzata(parametro):
         if parametro[key] != "":
             if key == "Data_Start":
                 base += f"AND `DATA CONCESSIONE` > %s "
-            base += f"AND `{key}` LIKE %s "
+            elif key == "Data_End":
+                base += f"AND `DATA CONCESSIONE` < %s "
+            else:
+                base += f"AND `{key}` LIKE %s "
             ricerca.append(parametro[key])
             #return base, ricerca
     # query = base % tuple(f"'{p}'" if isinstance(p, str) else p for p in ricerca)
