@@ -109,7 +109,7 @@ def app():
                 GENERALE = pd.DataFrame(columns=df_visualizzato.columns)
                 AGRICOLTURA = pd.DataFrame(columns=df_visualizzato.columns)
                 PESCA = pd.DataFrame(columns=df_visualizzato.columns)
-                den_value = df_visualizzato.loc[df_visualizzato['C.F. Beneficiario'] == CFS["CF_1"], 'Denominazione Beneficiario'].iloc[0]
+                den_value = df_visualizzato.loc[df_visualizzato['C.F. Beneficiario'] == CFS["CF_1"].strip(), 'Denominazione Beneficiario'].iloc[0]
                 st.write(den_value)
                 for index, row in df_visualizzato.iterrows():
                     if "De Minimis" in row["Tipo procedimento"]:
@@ -131,10 +131,13 @@ def app():
                 somma_importi_Generale = df_filtro['Elemento di aiuto'].sum()
                 netto= 300000 - somma_importi_Generale
                 # st.session_statef"Generale"] = somma_importi_Generale , den_value
+                formatted_netto = f"{netto:,.2f}"
                 if netto > 0 :  
-                    st.success(f"L'azienda {den_value} ha ancora a disposizione **{netto} €** in De Minimis")
+                    
+                    st.success(f"L'azienda **{den_value}** ha ancora a disposizione **{formatted_netto} €** in De Minimis")
                 elif netto < 0 : 
                     st.warning("Sembrerebbe che l'azienda ha una capienza negativa in questo momento ..")
+                    st.button("Chiama la guardi di finanza")
                 elif netto == 0: 
                     st.warning("Esattamente zero euro disponibili 🫢")
 

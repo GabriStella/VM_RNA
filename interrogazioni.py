@@ -20,12 +20,12 @@ def Ask_CF(CFS):
     
     if len(CFS) == 1:
         base_query += " AND `C.F. Beneficiario` = %s"
-        query_params.append(CFS['CF_1'])
+        query_params.append(CFS['CF_1'].strip())
     elif len(CFS) > 1:
         placeholders = ', '.join(['%s'] * len(CFS))
         base_query += f" AND `C.F. Beneficiario` IN ({placeholders})"
         for key in CFS:
-            query_params.append(CFS[key])
+            query_params.append(CFS[key].stip())
     else:
         return None
 
@@ -185,7 +185,7 @@ def ricerca_avanzata(parametro):
                 cursor.close()
                 connection.close()
     else: 
-        return None
+        pass
         
 def Excel_avanzato(valori):
     

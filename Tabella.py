@@ -13,9 +13,9 @@ conn = mysql.connector.connect(**config)
 cursor = conn.cursor()
 
 
-table_name = 'Aiuti_Individuali'
-create_table_query = '''
-    CREATE TABLE Aiuti_Individuali (
+table_name = 'PROVA'
+create_table_query = f'''
+    CREATE TABLE {table_name} (
         id INT AUTO_INCREMENT PRIMARY KEY,
         `Identificativo Misura (CAR)` VARCHAR(255),
         `Titolo Misura` VARCHAR(1000),
