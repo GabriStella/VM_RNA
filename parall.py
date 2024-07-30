@@ -89,7 +89,7 @@ def main():
             files_by_month[(year, month)].append(os.path.join(folder_path, filename))
 
     for (year, month), files in sorted(files_by_month.items()):
-        # files=['N:\\035-DEMINIMIS\\02-CONVERSIONE_DATI\\CSV_GABRIELE_OK\\OpenData_Aiuti_2022_07.csv']
+        files=['N:\\035-DEMINIMIS\\02-CONVERSIONE_DATI\\CSV_GABRIELE_OK\\OpenData_Aiuti_2022_07.csv']
         # year="2024"
         # month="02"
         print(f"PROCESSO : {year}-{month}")

@@ -176,7 +176,7 @@ def process_files(files, batch_size=150):
         
   
         linea[datetime_column_index] = mysql_formatted_datetime
-    nome_tabella='PROVA'
+    nome_tabella='aiuti_individuali'
     with ThreadPoolExecutor(max_workers=4) as executor:
         futures = [executor.submit(insert_rows, batch, nome_tabella) for batch in process_batches(row, batch_size)]
         
@@ -196,6 +196,9 @@ def main():
             files_by_month[(year, month)].append(os.path.join(folder_path, filename))
 
     for (year, month), files in sorted(files_by_month.items()):
+        files=['N:\\035-DEMINIMIS\\02-CONVERSIONE_DATI\\CSV_GABRIELE_OK\\OpenData_Aiuti_2024_07.csv']
+        
+
         print(f"Mese : {year}-{month}")
         process_files(files, batch_size=150)
 

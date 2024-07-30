@@ -25,7 +25,7 @@ def Ask_CF(CFS):
         placeholders = ', '.join(['%s'] * len(CFS))
         base_query += f" AND `C.F. Beneficiario` IN ({placeholders})"
         for key in CFS:
-            query_params.append(CFS[key].stip())
+            query_params.append(CFS[key].strip())
     else:
         return None
 
@@ -45,7 +45,6 @@ def Ask_CF(CFS):
             conn.close()
 
     return df
-
 
 def CREA_DF(AMBITO):
     
@@ -133,11 +132,14 @@ def COMPILA_EXCEL_gen(ambito):
     'J': 'Norma_misura',
     'K': 'AIUTO'
     }
-
-    start_row = 6
-    for index, row in ambito.iterrows():
-        for excel_col, df_col in mapping.items():
-            ws[f'{excel_col}{start_row + index}'] = row[df_col]
+    try:
+        if ambito != None:
+            pass
+    except:
+        start_row = 6
+        for index, row in ambito.iterrows():
+            for excel_col, df_col in mapping.items():
+                ws[f'{excel_col}{start_row + index}'] = row[df_col]
 
     with tempfile.TemporaryDirectory() as tmpdirname:
         doc_path = os.path.join(tmpdirname, "TENTATIVO.xlsx")

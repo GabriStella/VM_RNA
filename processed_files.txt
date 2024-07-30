@@ -56,3 +56,4 @@ OpenData_Aiuti_2024_03_004.xml
 OpenData_Aiuti_2024_04.xml
 OpenData_Aiuti_2024_05.xml
 OpenData_Aiuti_2024_06.xml
+OpenData_Aiuti_2024_07.xml

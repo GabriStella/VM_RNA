@@ -8,9 +8,7 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 import pandas as pd
 
 
-
 def app():
-
 
     # logger.info('Hello world')
     if 'cliente' not in st.session_state:
@@ -18,15 +16,17 @@ def app():
         st.session_state.cliente = UUID
     UUID = st.session_state.cliente
 
-    
+    image_path = "C:\\Users\\g.stella\\Desktop\\CIAO\\logoCDR-2022-positivo_vert.png" 
+
+    st.logo(image_path, icon_image=image_path) 
     aa = st.sidebar.radio("Seleziona il tipo di tool di cui hai bisogno", ["De Minimis","Ricerca Avanzata"], key=f"choosed_mood_{UUID}")
     if aa== "De Minimis" :
-        st.title("Compila DeMinimis")
-        # if "Generale" in st.session_state: 
-        #     den_value, somma_importi_Generale = st.session_state["Generale"]
-        #     st.success(f"{den_value}, {somma_importi_Generale}")
-        
-        cf_input= st.text_input("Codice Fiscale : ", key=f"get_cf_{UUID}")
+        st.title("Verifica aiuti di stato")
+
+
+        col1, col2 = st.columns(2)
+        with col1:
+            cf_input= st.text_input("Codice Fiscale : ", key=f"get_cf_{UUID}")
         CFS={}
         if 'cf_input_value' not in st.session_state:
             st.session_state.cf_input_value = ""
@@ -34,8 +34,8 @@ def app():
         CFS["CF_1"]=cf_input
 
         cf_value = st.session_state.cf_input_value
-        Collegate=st.text_input("Quante sono le imprese collegate? ",value=0)
-
+        with col2:
+            Collegate=st.text_input("Quante sono le imprese collegate? ",value=0)
 
 
         st.markdown(
@@ -90,13 +90,19 @@ def app():
             unsafe_allow_html=True
     )
 
-        # try:
-        Collegate=int(Collegate)
-        if Collegate != "0":
-            
+        try:
+            Collegate=int(Collegate)
             for i in range(2,Collegate+2) :
-                cf_inputs= st.text_input("Codice Fiscale : ",key=f"get_cf_{UUID}_{i}")
+                if i%2==0:
+                    with col1:
+                        cf_inputs= st.text_input("Codice Fiscale : ",key=f"get_cf_{UUID}_{i}")
+                else:
+                    with col2:
+                        cf_inputs= st.text_input("Codice Fiscale : ",key=f"get_cf_{UUID}_{i}")
                 CFS[f"CF_{i}"]=cf_inputs
+        except: 
+            st.error(f"**{Collegate}** non sembra un numero ")
+
         if st.button("Esegui Ricerca"):
             try:
                 CF_Result=Ask_CF(CFS)
@@ -154,6 +160,17 @@ def app():
                                             data=excel1,
                                             file_name=f"DEMINIMIS_{den_value}_{oggi_formato} - GENERALE.xlsx",
                                             mime='application/xlsx')
+                else: 
+                    GENERALE=CREA_DF(GENERALE)
+                    excel1=COMPILA_EXCEL_gen(GENERALE)
+                    oggi = date.today()
+                    oggi_formato = oggi.strftime("%d-%m-%Y")
+                    
+                    with col1:
+                        st.download_button(label='Download Excel - GENERALE', 
+                                        data=excel1,
+                                        file_name=f"DEMINIMIS_{den_value}_{oggi_formato} - GENERALE.xlsx",
+                                        mime='application/xlsx')
 
                 if not AGRICOLTURA.empty:
                     AGRICOLTURA=CREA_DF(AGRICOLTURA)
@@ -181,64 +198,92 @@ def app():
         # st.caption("Non è ancora consigliato usare questa pagina, non dovrebbe creare grossi problemi, ma potrebbe restituire degli errori perchè bisogna ancora sistemare un paio di cose in SQL")
         oggi = date.today()
         oggi_formato = oggi.strftime("%Y-%m-%d")
-        PARAMETRI = st.sidebar.multiselect("Parametri di ricerca", ["Identificativo Misura (CAR)", "Titolo Misura",  "COR", "Descrizione", "Data Concessione", "CUP", "Denominazione", "C.F. Beneficiario", "Regione", "Autorita Concedente", "Numero di riferimento della misura", "Tipo Procedimento", "Regolamento/Comunicazione", "Settore di attività"], key=f"choosed_param_{UUID}")
+        PARAMETRI = ["Identificativo Misura (CAR)", 
+                     "Titolo Misura",  
+                     "COR", 
+                     "Descrizione", 
+                     "Data Concessione", 
+                     "CUP", 
+                     "Denominazione", 
+                     "C.F. Beneficiario", 
+                     "Regione", 
+                     "Autorità Concedente",
+                     "Numero di riferimento della misura",
+                     "Tipo Procedimento", 
+                     "Regolamento/Comunicazione", 
+                     "Settore di attività"] #st.sidebar.multiselect("Parametri di ricerca", ["Identificativo Misura (CAR)", "Titolo Misura",  "COR", "Descrizione", "Data Concessione", "CUP", "Denominazione", "C.F. Beneficiario", "Regione", "Autorita Concedente", "Numero di riferimento della misura", "Tipo Procedimento", "Regolamento/Comunicazione", "Settore di attività"], key=f"choosed_param_{UUID}")
         richieste={}
-        if "Data Concessione" in PARAMETRI: 
-            DATA=st.sidebar.radio("Data Concessione",["Intervallo di date", "Data Specifica", "Successiva a ", "Precedente a "], key=f"Spec_Data_{UUID}")
-        for param in PARAMETRI:
-            if param=="Data Concessione": 
-                if DATA ==  "Intervallo di date":
-                    st.write(f"<div style='text-align: center;'>{param}</div>", unsafe_allow_html=True)
-                    col1, col2 = st.columns(2,vertical_alignment= 'center') 
+        # if "Data Concessione" in PARAMETRI: 
+        #     DATA=st.sidebar.radio("Data Concessione",["Intervallo di date", "Data Specifica", "Successiva a ", "Precedente a "], key=f"Spec_Data_{UUID}")
+        col1, col2 = st.columns(2)
+
+
+
+        for i in range(len(PARAMETRI)):
+            param=PARAMETRI[i]
+            if i % 2 == 0:
+                if param=="Data Concessione": 
+                    # if DATA ==  "Intervallo di date":
                     with col1:
-                        input1 = st.date_input("Da", datetime(2022, 1, 1),key=f"Datastart_{UUID}")
+                        input1 = st.date_input("Da", None,key=f"Datastart_{UUID}")
                     with col2:
-                        input2 = st.date_input("A", datetime(2024, 1, 1),key=f"Dataend_{UUID}")
+                        input2 = st.date_input("A", None,key=f"Dataend_{UUID}")
                     st.caption("La ricerca restituirà gli aiuti nel Range di date inserite")
                     richieste["Data_Start"]=input1
                     richieste["Data_End"]=input2
-                elif DATA ==  "Successiva a ":
-                
-                    input = st.date_input(f" {param} :", datetime(2024, 1, 1),key=f"get_{param}_{UUID}")
-                    st.caption("La ricerca restituirà gli aiuti successivi alla data inserita")
-                    richieste["Data_Start"]=input
-                elif DATA ==  "Precedente a ":
-                    input = st.date_input(f" {param} :", datetime(2024, 1, 1),key=f"get_{param}_{UUID}")
-                    st.caption("La ricerca restituirà gli aiuti precedenti alla data inserita")
-                    richieste["Data_End"]=input
-                else:  #! DATA SPECIFICA
-                    input = st.date_input(f" {param} :", datetime(2024, 1, 1),key=f"get_{param}_{UUID}")
-                    st.caption("La ricerca restituirà gli aiuti nella data inserita")
-                    richieste[f"{param}"]=input
-      
+                else:
+                    with col1:
+                        input = st.text_input(f" {param} :",key=f"get_{param}_{UUID}")
+                        richieste[f"{param}"]=input
+  
             else:
-                input = st.text_input(f" {param} :",key=f"get_{param}_{UUID}")
-                richieste[f"{param}"]=input
-        if PARAMETRI != []: 
-            if st.button("Esegui Ricerca"):
-                try:
-                    ppp=ricerca_avanzata(richieste)
-                    # st.write(richieste)
-                    if len(ppp) > 50:
-                        st.warning(f"La tabella contiene {len(ppp)} righe, sono mostrate solo le prime 50")
-                        df_ridotto = ppp.iloc[:50]
-                        st.write(len(ppp))
-                    else:
-                        df_ridotto = ppp
-                        st.write("TUTTO")
-                    Visualizzazione= ["Identificativo Misura (CAR)", "Numero di riferimento della misura", "Titolo Misura", "Tipo Misura", "COR", "Titolo Progetto", "Data Concessione", "Denominazione Beneficiario", "C.F. Beneficiario", "Regione", "Elemento di aiuto"]
-                    df_visualizzato = df_ridotto[Visualizzazione]
-                    st.dataframe(df_visualizzato, use_container_width=True)
-                    excel=Excel_avanzato(ppp)
+                if param=="Data Concessione": 
+                # if DATA ==  "Intervallo di date":
+                    with col1:
+                        input1 = st.date_input("Da", None,key=f"Datastart_{UUID}")
+                    with col2:
+                        input2 = st.date_input("A", None,key=f"Dataend_{UUID}")
+                    st.caption("La ricerca restituirà gli aiuti nel Range di date inserite")
+                    richieste["Data_Start"]=input1
+                    richieste["Data_End"]=input2
+                else:
+                    with col2:
+                        input = st.text_input(f" {param} :",key=f"get_{param}_{UUID}")
+                        richieste[f"{param}"]=input
 
-                    st.download_button(label='Download Riepilogo Ricerca', 
-                                    data=excel,
-                                    file_name=f"Ricerca_Avanzata_{oggi_formato}.xlsx",
-                                    mime='application/xlsx')
-                except Exception as e: 
-                    st.error(f"stg went wrong, cosa? ->  {e}")
-        else: 
-            st.warning("**Selezionare almeno un parametro di ricerca per procedere**")
+        a=0
+        for key in richieste:
+            if richieste[key] == None: 
+                richieste[key] = ""
+            a+=1
+            if richieste[key] != "" :
+                
+                if st.button("Esegui Ricerca"):
+                    try:
+                        ppp=ricerca_avanzata(richieste)
+                        # st.write(richieste)
+                        if len(ppp) > 50:
+                            st.warning(f"La tabella contiene {len(ppp)} righe, sono mostrate solo le prime 50")
+                            df_ridotto = ppp.iloc[:50]
+                            st.write(len(ppp))
+                        else:
+                            df_ridotto = ppp
+                            st.write("TUTTO")
+                        Visualizzazione= ["Identificativo Misura (CAR)", "Numero di riferimento della misura", "Titolo Misura", "Tipo Misura", "COR", "Titolo Progetto", "Data Concessione", "Denominazione Beneficiario", "C.F. Beneficiario", "Regione", "Elemento di aiuto"]
+                        df_visualizzato = df_ridotto[Visualizzazione]
+                        st.dataframe(df_visualizzato, use_container_width=True)
+                        excel=Excel_avanzato(ppp)
+
+                        st.download_button(label='Download Riepilogo Ricerca', 
+                                        data=excel,
+                                        file_name=f"Ricerca_Avanzata_{oggi_formato}.xlsx",
+                                        mime='application/xlsx')
+                    except Exception as e: 
+                        st.error(f"stg went wrong, cosa? ->  {e}")
+                break
+
+            if a == len(PARAMETRI):
+                st.warning("**Compilare almeno un parametro di ricerca per procedere**")
         
         # st.write(richieste)
         # st.write(ppp)
@@ -264,96 +309,3 @@ def main():
 if __name__ == '__main__':
 
     main()
-
-
-
-
-
-
-    
-
-
-
-
-# """#? QUESTI DA AGGIUNGERE IN RICERCA AVANZATA MI RACCOMANDO AGGIUNGERE NON SOLO LORO. 
-# #             #? volendo aggiungiamo altri parametri di ricerca, ma sinceramente mi sembra inutile. 
-#     # Data Concessione #! INSERIRE POSSIBILITà DI RANGE
-
-    # end_date = date.today()
-    # start_date = end_date - timedelta(days=3*365)
-#     # st.warning("non modificare questo campo per la compilazione del file DEMINIMIS")
-    
-#     cf_input1= st.date_input("Data Concessione : ", (start_date, end_date),key=f"get_dc_{UUID}")
-#     st.caption("Il periodo preso in considerazione inizialmente prevede già 3 anni indietro da oggi")
-#     if len(cf_input1) == 2:
-#         start_date, end_date = cf_input1
-#         # Formattare le date come dd/mm/yyyy
-#         formatted_start_date = start_date.strftime('%d/%m/%Y')
-#         formatted_end_date = end_date.strftime('%d/%m/%Y')
-#         st.write(f'L\'intervallo di date selezionato è dal {formatted_start_date} al {formatted_end_date}')
-#     elif len(cf_input1) == 1:
-#         formatted_start_date = start_date.strftime('%d/%m/%Y')
-#     else: 
-#         st.warning("nessun periodo selezionato")
-#     if 'cf_input_value1' not in st.session_state:
-#         st.session_state.cf_input_value1 = ""
-
-#     st.session_state.cf_input_value1 = cf_input1
-
-#     cf_value1 = st.session_state.cf_input_value1
-
-#     # Denominazione Beneficiario
-#     cf_input2= st.text_input("Denominazionee : ",key=f"get_db_{UUID}")
-
-#     if 'cf_input_value2' not in st.session_state:
-#         st.session_state.cf_input_value2 = ""
-
-#     st.session_state.cf_input_value2 = cf_input2
-
-#     cf_value2 = st.session_state.cf_input_value2
-
-#     # COR
-#     cf_input3= st.text_input("COR : ",key=f"get_COR_{UUID}")
-
-#     if 'cf_input_value3' not in st.session_state:
-#         st.session_state.cf_input_value3 = ""
-
-#     st.session_state.cf_input_value3 = cf_input3
-
-#     cf_value3 = st.session_state.cf_input_value3
-
-#     if st.button("Esegui Ricerca"):
-#         params = {
-#             'CF': cf_value,
-#             'Data_atto': cf_value1,
-#             'Denominazione': cf_value2,
-#             'COR': cf_value3
-#         }
-
-
-
-            
-#     # Settore di attività
-#     cf_input= st.text_input("Codice Fiscale : ",key=f"get_cf_{UUID}")
-
-#     if 'cf_input_value' not in st.session_state:
-#         st.session_state.cf_input_value = ""
-
-#     st.session_state.cf_input_value = cf_input
-
-#     cf_value = st.session_state.cf_input_value
-
-#     # Tipo procedimento
-#     cf_input= st.text_input("Codice Fiscale : ",key=f"get_cf_{UUID}")
-
-#     if 'cf_input_value' not in st.session_state:
-#         st.session_state.cf_input_value = ""
-
-#     st.session_state.cf_input_value = cf_input
-
-#     cf_value = st.session_state.cf_input_value
-
-
-
-#  """
-# Chiamata alla funzione main per avviare l'applicazione
