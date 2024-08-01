@@ -147,15 +147,16 @@ def process_files(files, batch_size=150):
                 else:
                     row[i].append(hash[i])
             else:
-                CU=f"{hash[i]}_{element_counters[hash[i]]}"
-                r=zero_uno(CU)
+                hash[i]= f"{hash[i]}_{element_counters[hash[i]]}"
+                # CU=f"{hash[i]}_{element_counters[hash[i]]}"
+                r=zero_uno(hash[i])
                 if r == 1: 
                     del row[i]
                     c+=1 
                     d=1
                     pass
                 else:
-                    row[i].append(CU)
+                    row[i].append(hash[i])
         else:
             r=zero_uno(hash[i])
             if r == 1: 
@@ -166,6 +167,31 @@ def process_files(files, batch_size=150):
             else:
                 row[i].append(hash[i])
         i=i+c-d
+    try:
+        conn = mysql.connector.connect(
+            host='localhost',
+            user='RNAuser',
+            password='7RKlo1StosGVSCnx',
+            database='RNAuser'
+        )
+        cursor = conn.cursor()
+
+        query = "INSERT INTO CU (COD_UN) VALUES (%s)"
+        dati_tuples = [(valore,) for valore in hash]
+        cursor.executemany(query, dati_tuples)
+        
+        conn.commit()
+        
+        print(f"{cursor.rowcount} righe inserite con successo.")
+        
+    except Exception as e:
+        print(f"Errore: {e}")
+        
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
     datetime_column_index = 7
     for linea in row:
 
@@ -196,7 +222,7 @@ def main():
             files_by_month[(year, month)].append(os.path.join(folder_path, filename))
 
     for (year, month), files in sorted(files_by_month.items()):
-        files=['N:\\035-DEMINIMIS\\02-CONVERSIONE_DATI\\CSV_GABRIELE_OK\\OpenData_Aiuti_2024_07.csv']
+        # files=['N:\\035-DEMINIMIS\\02-CONVERSIONE_DATI\\CSV_GABRIELE_OK\\OpenData_Aiuti_2024_07.csv']
         
 
         print(f"Mese : {year}-{month}")

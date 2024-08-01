@@ -12,6 +12,8 @@ def app():
 
     # logger.info('Hello world')
     if 'cliente' not in st.session_state:
+        start_time1 = datetime.now()
+        print(f"    nuovo accesso: {start_time1.strftime('%H:%M:%S')}")
         UUID=str(uuid.uuid4())
         st.session_state.cliente = UUID
     UUID = st.session_state.cliente
@@ -104,6 +106,8 @@ def app():
             st.error(f"**{Collegate}** non sembra un numero ")
 
         if st.button("Esegui Ricerca"):
+            start_time1 = datetime.now()
+            print(f"    Ricerca: {start_time1.strftime('%H:%M:%S')}")
             try:
                 CF_Result=Ask_CF(CFS)
                 # st.write(NUOVO)
@@ -111,7 +115,7 @@ def app():
                 # Visualizzazione= ["Identificativo Misura (CAR)", "Numero di riferimento della misura", "Titolo Misura", "Tipo Misura", "COR", "Titolo Progetto", "Data Concessione", "Denominazione Beneficiario", "C.F. Beneficiario", "Regione", "Regolamento/Comunicazione", "Elemento di aiuto"]
                 # df_visualizzato = CF_Result[Visualizzazione]
                 df_visualizzato = CF_Result.drop(columns=['id'])
-                st.dataframe(df_visualizzato, use_container_width=True)
+                # st.dataframe(df_visualizzato, use_container_width=True)
                 GENERALE = pd.DataFrame(columns=df_visualizzato.columns)
                 AGRICOLTURA = pd.DataFrame(columns=df_visualizzato.columns)
                 PESCA = pd.DataFrame(columns=df_visualizzato.columns)
@@ -139,8 +143,10 @@ def app():
                 # st.session_statef"Generale"] = somma_importi_Generale , den_value
                 formatted_netto = f"{netto:,.2f}"
                 if netto > 0 :  
-                    
+                    url = "https://www.sian.it/GestioneTrasparenza/?op=0&referer=https%3A%2F%2Fwww.sian.it%2Fportale-sian%2Fsottosezione.jsp%3Fpid%3D6"
                     st.success(f"L'azienda **{den_value}** ha ancora a disposizione **{formatted_netto} €** in De Minimis")
+                    st.warning("**ATTENZIONE**: \n \n  Confrontarsi con il cliente per verificare se ci sono stati negli ultimi 30 giorni: \n \n - NUOVE CONCESSIONI \n \n - PROVVEDIMENTI DI REVOCA \n \n in quanto queste variazioni potrebbero non essere aggiornate in questo calcolo. ")
+                    st.warning("In caso di aziende nel settore agricolo e/o dell'acquacoltura consultare il [portale SIAN](%s)" % url)
                 elif netto < 0 : 
                     st.warning("Sembrerebbe che l'azienda ha una capienza negativa in questo momento ..")
                     st.button("Chiama la guardi di finanza")
@@ -228,9 +234,9 @@ def app():
                         input1 = st.date_input("Da", None,key=f"Datastart_{UUID}")
                     with col2:
                         input2 = st.date_input("A", None,key=f"Dataend_{UUID}")
-                    st.caption("La ricerca restituirà gli aiuti nel Range di date inserite")
-                    richieste["Data_Start"]=input1
-                    richieste["Data_End"]=input2
+                        
+                    richieste["Data_Start"]= input1 if input1 is not None else ""
+                    richieste["Data_End"]= input2 if input2 is not None else ""
                 else:
                     with col1:
                         input = st.text_input(f" {param} :",key=f"get_{param}_{UUID}")
@@ -243,36 +249,50 @@ def app():
                         input1 = st.date_input("Da", None,key=f"Datastart_{UUID}")
                     with col2:
                         input2 = st.date_input("A", None,key=f"Dataend_{UUID}")
-                    st.caption("La ricerca restituirà gli aiuti nel Range di date inserite")
-                    richieste["Data_Start"]=input1
-                    richieste["Data_End"]=input2
+                    
+                    richieste["Data_Start"]=input1 if input1 is not None else ""
+                    richieste["Data_End"]= input2 if input2 is not None else ""
                 else:
                     with col2:
                         input = st.text_input(f" {param} :",key=f"get_{param}_{UUID}")
                         richieste[f"{param}"]=input
-
+        # st.write(richieste)
         a=0
         for key in richieste:
-            if richieste[key] == None: 
-                richieste[key] = ""
+            # if richieste[key] == None: 
+            #     richieste[key] = ""
             a+=1
             if richieste[key] != "" :
                 
                 if st.button("Esegui Ricerca"):
+                    start_time1 = datetime.now()
+                    print(f"    ADV_SMN: {start_time1.strftime('%H:%M:%S')}")
+
                     try:
-                        ppp=ricerca_avanzata(richieste)
+                        with st.spinner("Eseguo la ricerca ..."):
+                            ppp=ricerca_avanzata(richieste)
+
                         # st.write(richieste)
-                        if len(ppp) > 50:
+                        if len(ppp) > 50 and len(ppp) <= 99999:
                             st.warning(f"La tabella contiene {len(ppp)} righe, sono mostrate solo le prime 50")
                             df_ridotto = ppp.iloc[:50]
-                            st.write(len(ppp))
+                            # st.write(len(ppp))
+                        elif len(ppp) >99999:
+                            df_ridotto = ppp.iloc[:50]
+                            st.error("""
+                                     Sembrerebbe che la ricerca restituisca più di 100.000 righe.
+                                     
+                                        l'excel sarà composto solo con le 100.000 più recenti, si prega di affinare la ricerca se si vuole risultati più precisi
+                                     
+                                     """)
                         else:
                             df_ridotto = ppp
-                            st.write("TUTTO")
+                            st.success("Stai visualizzando tutti i risultati della ricerca")
                         Visualizzazione= ["Identificativo Misura (CAR)", "Numero di riferimento della misura", "Titolo Misura", "Tipo Misura", "COR", "Titolo Progetto", "Data Concessione", "Denominazione Beneficiario", "C.F. Beneficiario", "Regione", "Elemento di aiuto"]
                         df_visualizzato = df_ridotto[Visualizzazione]
                         st.dataframe(df_visualizzato, use_container_width=True)
-                        excel=Excel_avanzato(ppp)
+                        with st.spinner("Sto compilando l'excel completo ..."):
+                            excel=Excel_avanzato(ppp)
 
                         st.download_button(label='Download Riepilogo Ricerca', 
                                         data=excel,

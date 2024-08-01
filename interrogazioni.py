@@ -55,7 +55,7 @@ def CREA_DF(AMBITO):
             'CFB' : selected_columns.iloc[:, 11],
             'DATA' : selected_columns.iloc[:, 7],
             'autorita' : selected_columns.iloc[:, 14],
-            'Tit_misura' : selected_columns.iloc[:, 2],       
+            'Tit_misura' : selected_columns.iloc[:, 1],       
             'Norma_misura' : selected_columns.iloc[:, 3],
             'AIUTO' : selected_columns.iloc[:, 23]
         })
@@ -166,9 +166,8 @@ def ricerca_avanzata(parametro):
             else:
                 base += f"AND `{key}` LIKE %s "
             ricerca.append(parametro[key])
-            #return base, ricerca
-    # query = base % tuple(f"'{p}'" if isinstance(p, str) else p for p in ricerca)
-    # return query
+    base += f"ORDER BY `DATA CONCESSIONE` DESC LIMIT %s"
+    ricerca.append(100000)
     if base != "SELECT * FROM `aiuti_individuali` WHERE 1=1 ":
         try:
             connection = mysql.connector.connect(**config)
