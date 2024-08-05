@@ -127,7 +127,7 @@ def process_files(files, batch_size=150):
         linea[datetime_column_index] = mysql_formatted_datetime
 
     with ThreadPoolExecutor(max_workers=4) as executor:
-        futures = [executor.submit(insert_rows, batch, 'Aiuti_Individuali') for batch in process_batches(row, batch_size)]
+        futures = [executor.submit(insert_rows, batch, 'rna_Aiuti_Individuali') for batch in process_batches(row, batch_size)]
         
         for future in futures:
             future.result()

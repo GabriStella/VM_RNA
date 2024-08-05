@@ -13,7 +13,7 @@ def elimina_batch(connection_pool):
             DELETE FROM CUPROVA
             WHERE CODU NOT IN (
                 SELECT COD_UN
-                FROM TempCodiciGlobal
+                FROM CU
             )
             LIMIT 500
             """
@@ -57,19 +57,7 @@ def elimina_righe_batch():
             **config
         )
         
-        conn = connection_pool.get_connection()
-        cursor = conn.cursor()
 
-        cursor.execute("CREATE TABLE IF NOT EXISTS TempCodiciGlobal (COD_UN TEXT)")
-
-        cursor.execute("TRUNCATE TABLE TempCodiciGlobal")
-        
-        cursor.execute("INSERT INTO TempCodiciGlobal (COD_UN) SELECT COD_UN FROM CU")
-        cursor.execute("CREATE INDEX idx_cod_un ON TempCodiciGlobal (COD_UN)")
-        conn.commit()
-
-        cursor.close()
-        conn.close()
 
         with ThreadPoolExecutor(max_workers=5) as executor:
             futures = [executor.submit(esegui_eliminazione_batch, connection_pool) for _ in range(5)]

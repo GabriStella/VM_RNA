@@ -13,7 +13,7 @@ conn = mysql.connector.connect(**config)
 cursor = conn.cursor()
 
 
-table_name = 'PROVA'
+table_name = 'rna_aiuti_individuali'
 create_table_query = f'''
     CREATE TABLE {table_name} (
         id INT AUTO_INCREMENT PRIMARY KEY,
