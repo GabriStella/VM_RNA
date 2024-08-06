@@ -201,6 +201,7 @@ def app():
                 st.error(f"Sembra che il codice Fiscale inserito non sia corretto... {e}")
     elif aa== "Ricerca Avanzata" :
         st.title("Consulta RNA")
+        op_reg = leggi_opzioni_da_file('REGIONI.txt') 
         # st.caption("Non è ancora consigliato usare questa pagina, non dovrebbe creare grossi problemi, ma potrebbe restituire degli errori perchè bisogna ancora sistemare un paio di cose in SQL")
         oggi = date.today()
         oggi_formato = oggi.strftime("%Y-%m-%d")
@@ -237,6 +238,10 @@ def app():
                         
                     richieste["Data_Start"]= input1 if input1 is not None else ""
                     richieste["Data_End"]= input2 if input2 is not None else ""
+                elif param == "Regione": 
+                    with col1:
+                        input=st.selectbox(f" {param} :", op_reg, key=f"get_{param}_{UUID}",placeholder="Scegliere un'opzione", index= None)
+                        richieste[f"{param}"]=input
                 else:
                     with col1:
                         input = st.text_input(f" {param} :",key=f"get_{param}_{UUID}")
@@ -252,6 +257,10 @@ def app():
                     
                     richieste["Data_Start"]=input1 if input1 is not None else ""
                     richieste["Data_End"]= input2 if input2 is not None else ""
+                elif param == "Regione": 
+                    with col2:
+                        input=st.selectbox(f" {param} :", op_reg, key=f"get_{param}_{UUID}", placeholder="Scegliere un'opzione", index= None)
+                        richieste[f"{param}"]=input
                 else:
                     with col2:
                         input = st.text_input(f" {param} :",key=f"get_{param}_{UUID}")

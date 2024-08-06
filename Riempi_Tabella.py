@@ -147,6 +147,15 @@ def main():
     for (year, month), files in sorted(files_by_month.items()):
         print(f"Mese : {year}-{month}")
         process_files(files, batch_size=150)
+    
+    oggi =datetime.datetime.now() 
+    formattata = oggi.strftime('%d-%m-%Y')
+    with open('VAR_DINAMICHE\\UAG.txt', 'w', encoding='utf-8') as file:
+        file.write(f"{formattata}")
+    
+    percorso_script = 'VAR_DINAMICHE\\tendine.py'
+    os.system(f"python {percorso_script}.py")
+
 
 if __name__ == "__main__":
     main()

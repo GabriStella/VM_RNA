@@ -145,7 +145,7 @@ for filename in tqdm(os.listdir(xml_folder), desc="Elaborazione dei file XML"):
         with open('processed_files.txt', 'a') as f:
             f.write(filename + '\n')
 
+print("Inizio DB SQL")
 
-
-
+os.system("python Riempi_Tabella.py")
 

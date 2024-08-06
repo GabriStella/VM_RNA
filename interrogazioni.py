@@ -5,7 +5,12 @@ import tempfile
 import os
 import mysql.connector
 
-
+def leggi_opzioni_da_file(nome_file):
+    percorso_file=f"VAR_DINAMICHE\\{nome_file}"
+    with open(percorso_file, 'r', encoding='utf-8') as file:
+        contenuto = file.read()
+        opzioni = [opzione.strip() for opzione in contenuto.split(',') if opzione.strip()]
+    return opzioni
 
 
 def Ask_CF(CFS):
@@ -168,7 +173,7 @@ def ricerca_avanzata(parametro):
             ricerca.append(parametro[key])
     base += f"ORDER BY `DATA CONCESSIONE` DESC LIMIT %s"
     ricerca.append(100000)
-    if base != "SELECT * FROM `aiuti_individuali` WHERE 1=1 ":
+    if base != "SELECT * FROM `aiuti_individuali` WHERE 1=1 ORDER BY `DATA CONCESSIONE` DESC LIMIT %s":
         try:
             connection = mysql.connector.connect(**config)
             cursor = connection.cursor(dictionary=True)
