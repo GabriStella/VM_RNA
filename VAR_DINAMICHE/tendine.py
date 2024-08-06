@@ -31,3 +31,4 @@ final_list = sorted(set(processed_values))
 with open('REGIONI.txt', 'w', encoding='utf-8') as file:
     for item in final_list:
         file.write(f"{item},\n")
+

@@ -132,3 +132,11 @@ OpenData_Aiuti_2024_02_003.xml
 OpenData_Aiuti_2024_02_004.xml
 OpenData_Aiuti_2024_02_005.xml
 OpenData_Aiuti_2024_02_006.xml
+OpenData_Aiuti_2024_03.xml
+OpenData_Aiuti_2024_03_002.xml
+OpenData_Aiuti_2024_03_003.xml
+OpenData_Aiuti_2024_03_004.xml
+OpenData_Aiuti_2024_04.xml
+OpenData_Aiuti_2024_05.xml
+OpenData_Aiuti_2024_06.xml
+OpenData_Aiuti_2024_07.xml

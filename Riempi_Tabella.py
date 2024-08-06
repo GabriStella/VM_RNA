@@ -154,7 +154,7 @@ def main():
         file.write(f"{formattata}")
     
     percorso_script = 'VAR_DINAMICHE\\tendine.py'
-    os.system(f"python {percorso_script}.py")
+    os.system(f"python {percorso_script}")
 
 
 if __name__ == "__main__":
