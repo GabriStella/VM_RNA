@@ -6,7 +6,8 @@ from streamlit.logger import get_logger
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 import pandas as pd
-
+import os
+import subprocess
 
 def app():
 
@@ -21,9 +22,13 @@ def app():
     image_path = "C:\\Users\\g.stella\\Desktop\\CIAO\\logoCDR-2022-positivo_vert.png" 
 
     st.logo(image_path, icon_image=image_path) 
-    aa = st.sidebar.radio("Seleziona il tipo di tool di cui hai bisogno", ["De Minimis","Ricerca Avanzata"], key=f"choosed_mood_{UUID}")
+    per_ultag=leggi_opzioni_da_file("UAG.txt")
+    
+    aa = st.sidebar.radio("Seleziona il tipo di tool di cui hai bisogno", ["De Minimis","Ricerca Avanzata", "Privato"], key=f"choosed_mood_{UUID}")
+    
     if aa== "De Minimis" :
         st.title("Verifica aiuti di stato")
+        st.write(f"**`Dati Aggiornati al {per_ultag[0]}`**")
 
 
         col1, col2 = st.columns(2)
@@ -201,6 +206,7 @@ def app():
                 st.error(f"Sembra che il codice Fiscale inserito non sia corretto... {e}")
     elif aa== "Ricerca Avanzata" :
         st.title("Consulta RNA")
+        st.write(f"**`Dati Aggiornati al {per_ultag[0]}`**")
         op_reg = leggi_opzioni_da_file('REGIONI.txt') 
         # st.caption("Non è ancora consigliato usare questa pagina, non dovrebbe creare grossi problemi, ma potrebbe restituire degli errori perchè bisogna ancora sistemare un paio di cose in SQL")
         oggi = date.today()
@@ -241,7 +247,7 @@ def app():
                 elif param == "Regione": 
                     with col1:
                         input=st.selectbox(f" {param} :", op_reg, key=f"get_{param}_{UUID}",placeholder="Scegliere un'opzione", index= None)
-                        richieste[f"{param}"]=input
+                        richieste[f"{param}"]=input if input is not None else ""
                 else:
                     with col1:
                         input = st.text_input(f" {param} :",key=f"get_{param}_{UUID}")
@@ -260,7 +266,7 @@ def app():
                 elif param == "Regione": 
                     with col2:
                         input=st.selectbox(f" {param} :", op_reg, key=f"get_{param}_{UUID}", placeholder="Scegliere un'opzione", index= None)
-                        richieste[f"{param}"]=input
+                        richieste[f"{param}"]=input if input is not None else ""
                 else:
                     with col2:
                         input = st.text_input(f" {param} :",key=f"get_{param}_{UUID}")
@@ -316,6 +322,17 @@ def app():
         
         # st.write(richieste)
         # st.write(ppp)
+    elif aa == "Privato":
+        print("someone enter in privato")
+        PW = st.text_input("SEI TU?", key="passwordd")
+        if st.button("Si, sono io"):
+            if PW== "MARANZA":
+                if st.button("Esegui Ciclo"):
+                    result = subprocess.run(['python', 'zzzzz.py'], capture_output=True, text=True)
+            else:
+                print("accesso Negato") 
+                st.write("sembra che non sia tu mi disp")
+                st.write("`RIP`")
     else:
         st.write("Mancata Selezione tool")
     # CF 

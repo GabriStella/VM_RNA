@@ -12,6 +12,7 @@ def leggi_opzioni_da_file(nome_file):
         opzioni = [opzione.strip() for opzione in contenuto.split(',') if opzione.strip()]
     return opzioni
 
+TAB_AGG="rna_aiuti_individuali"
 
 def Ask_CF(CFS):
     config = {
@@ -20,7 +21,7 @@ def Ask_CF(CFS):
         'database': 'RNAuser'
     }
 
-    base_query = "SELECT * FROM `aiuti_individuali` WHERE 1=1"
+    base_query = f"SELECT * FROM `{TAB_AGG}` WHERE 1=1"
     query_params = []
     
     if len(CFS) == 1:
@@ -160,7 +161,7 @@ def ricerca_avanzata(parametro):
         'database': 'RNAuser'
     }
 
-    base = "SELECT * FROM `aiuti_individuali` WHERE 1=1 "
+    base = f"SELECT * FROM `{TAB_AGG}` WHERE 1=1 "
     ricerca = []
     for key in parametro:
         if parametro[key] != "":
@@ -173,7 +174,7 @@ def ricerca_avanzata(parametro):
             ricerca.append(parametro[key])
     base += f"ORDER BY `DATA CONCESSIONE` DESC LIMIT %s"
     ricerca.append(100000)
-    if base != "SELECT * FROM `aiuti_individuali` WHERE 1=1 ORDER BY `DATA CONCESSIONE` DESC LIMIT %s":
+    if base != F"SELECT * FROM `{TAB_AGG}` WHERE 1=1 ORDER BY `DATA CONCESSIONE` DESC LIMIT %s":
         try:
             connection = mysql.connector.connect(**config)
             cursor = connection.cursor(dictionary=True)
