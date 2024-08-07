@@ -1,11 +1,20 @@
-print("terzo file che non elimina tutto")
 import time
 from datetime import datetime, timedelta
+import os
+from interrogazioni import *
 
-start_time = datetime.now()
-end_time = start_time + timedelta(minutes=2)
+RANTOLA=leggi_opzioni_da_file("TEMP.txt")
+TEMP = RANTOLA[0]
+if TEMP == "rna_aiuti_individuali":
+    print(f"stai usando aiuti_individuali passerai a {TEMP}")
+elif TEMP == "aiuti_individuali":
+    print(f"stai usando rna_aiuti_individuali passerai a {TEMP}")
+else: 
+    print("errorissimo")
 
-while datetime.now() < end_time:
-    orario = datetime.now().strftime('%H:%M:%S')
-    print(f"{orario} FACCIO COSE")
-    time.sleep(3 * 10)
+percorso="VAR_DINAMICHE\\TAB_UP.txt"
+with open(percorso, 'w', encoding='utf-8') as file:
+    file.write(f"{TEMP}")
+
+file="VAR_DINAMICHE\\TEMP.txt"
+os.remove(file)

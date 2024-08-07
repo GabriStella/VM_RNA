@@ -23,7 +23,8 @@ def app():
 
     st.logo(image_path, icon_image=image_path) 
     per_ultag=leggi_opzioni_da_file("UAG.txt")
-    
+    TABELLA=leggi_opzioni_da_file("TAB_UP.txt")
+    TABAGG=TABELLA[0]
     aa = st.sidebar.radio("Seleziona il tipo di tool di cui hai bisogno", ["De Minimis","Ricerca Avanzata", "Privato"], key=f"choosed_mood_{UUID}")
     
     if aa== "De Minimis" :
@@ -271,7 +272,7 @@ def app():
                     with col2:
                         input = st.text_input(f" {param} :",key=f"get_{param}_{UUID}")
                         richieste[f"{param}"]=input
-        # st.write(richieste)
+        st.write(TABAGG)
         a=0
         for key in richieste:
             # if richieste[key] == None: 

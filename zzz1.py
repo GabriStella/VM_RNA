@@ -1,3 +1,3 @@
 import os
 print("alberto")
-os.system('python zzzzz.py > output.log 2>&1')
+os.system('python zzzzz.py > Processo_Aggiornamento\\EstrazioneZIP.log 2>&1')
