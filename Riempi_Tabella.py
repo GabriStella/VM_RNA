@@ -8,6 +8,7 @@ import hashlib
 import collections
 import os
 import re
+from interrogazioni import *
 
 
 config = {
@@ -115,19 +116,21 @@ def process_files(files, batch_size=150):
         else:
             row[i].append(hash[i])
 
-    datetime_column_index = 7
-    for linea in row:
+    # datetime_column_index = 7
+    # for linea in row:
 
-        original_datetime_str = linea[datetime_column_index]
-        parsed_datetime = datetime.datetime.strptime(original_datetime_str, '%d-%m-%Y')
+    #     original_datetime_str = linea[datetime_column_index]
+    #     parsed_datetime = datetime.datetime.strptime(original_datetime_str, '%d-%m-%Y')
         
-        mysql_formatted_datetime = parsed_datetime.strftime('%Y-%m-%d')
+    #     mysql_formatted_datetime = parsed_datetime.strftime('%Y-%m-%d')
         
   
-        linea[datetime_column_index] = mysql_formatted_datetime
-
+    #     linea[datetime_column_index] = mysql_formatted_datetime
+    # Nome_Tabella='rna_Aiuti_Individuali'
+    RANTOLA=leggi_opzioni_da_file("TEMP.txt")
+    Nome_Tabella=RANTOLA[0]
     with ThreadPoolExecutor(max_workers=4) as executor:
-        futures = [executor.submit(insert_rows, batch, 'rna_Aiuti_Individuali') for batch in process_batches(row, batch_size)]
+        futures = [executor.submit(insert_rows, batch, Nome_Tabella) for batch in process_batches(row, batch_size)]
         
         for future in futures:
             future.result()

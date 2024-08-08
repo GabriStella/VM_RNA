@@ -225,7 +225,8 @@ def app():
                      "Numero di riferimento della misura",
                      "Tipo Procedimento", 
                      "Regolamento/Comunicazione", 
-                     "Settore di attività"] #st.sidebar.multiselect("Parametri di ricerca", ["Identificativo Misura (CAR)", "Titolo Misura",  "COR", "Descrizione", "Data Concessione", "CUP", "Denominazione", "C.F. Beneficiario", "Regione", "Autorita Concedente", "Numero di riferimento della misura", "Tipo Procedimento", "Regolamento/Comunicazione", "Settore di attività"], key=f"choosed_param_{UUID}")
+                     "Settore di attività"] 
+        #st.sidebar.multiselect("Parametri di ricerca", PARAMETRI, key=f"choosed_param_{UUID}")
         richieste={}
         # if "Data Concessione" in PARAMETRI: 
         #     DATA=st.sidebar.radio("Data Concessione",["Intervallo di date", "Data Specifica", "Successiva a ", "Precedente a "], key=f"Spec_Data_{UUID}")

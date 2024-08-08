@@ -1,5 +1,5 @@
 import mysql.connector
-
+import os
 
 config = {
     'user': 'RNAuser',
@@ -26,8 +26,28 @@ for row in results:
         processed_values.append(value.strip())
 
 final_list = sorted(set(processed_values))
-percorsor=""
-with open('REGIONI.txt', 'w', encoding='utf-8') as file:
+percorso="VAR_DINAMICHE\\REGIONI.txt"
+with open(percorso, 'w', encoding='utf-8') as file:
     for item in final_list:
         file.write(f"{item},\n")
 
+
+percorso="VAR_DINAMICHE\\TEMP.txt"
+with open(percorso, 'r', encoding='utf-8') as file:
+    contenuto = file.read()
+    opzioni = [opzione.strip() for opzione in contenuto.split(',') if opzione.strip()]
+
+
+
+UTAB = opzioni[0]
+percorso="VAR_DINAMICHE\\TAB_UP.txt"
+with open(percorso, 'w', encoding='utf-8') as file:
+    file.write(f"{UTAB}")
+
+
+file="VAR_DINAMICHE\\TEMP.txt"
+file1="processed_files_zip.txt"
+file2="processed_file.txt"
+os.remove(file)
+os.remove(file1)
+os.remove(file2)

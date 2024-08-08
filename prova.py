@@ -132,7 +132,7 @@ for filename in tqdm(os.listdir(xml_folder), desc="Elaborazione dei file XML"):
         df_cleaned = df.apply(lambda col: col.apply(remove_escapes, column_name=col.name))
         df_cleaned['Data Concessione'] = df_cleaned['Data Concessione'].str.split('+').str[0]
         df_cleaned['Data Concessione'] = pd.to_datetime(df_cleaned['Data Concessione'], format='%Y-%m-%d')
-        df_cleaned['Data Concessione'] = df_cleaned['Data Concessione'].dt.strftime('%d-%m-%Y')
+        # df_cleaned['Data Concessione'] = df_cleaned['Data Concessione'].dt.strftime('%d-%m-%Y')
 
         
         
@@ -147,5 +147,5 @@ for filename in tqdm(os.listdir(xml_folder), desc="Elaborazione dei file XML"):
 
 print("Inizio DB SQL")
 
-os.system("python Riempi_Tabella.py")
+os.system("python Riempi_Tabella.py > PopolaSQL.log 2>&1")
 
