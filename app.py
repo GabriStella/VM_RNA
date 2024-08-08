@@ -25,7 +25,7 @@ def app():
     per_ultag=leggi_opzioni_da_file("UAG.txt")
     TABELLA=leggi_opzioni_da_file("TAB_UP.txt")
     TABAGG=TABELLA[0]
-    aa = st.sidebar.radio("Seleziona il tipo di tool di cui hai bisogno", ["De Minimis","Ricerca Avanzata", "Privato"], key=f"choosed_mood_{UUID}")
+    aa = st.sidebar.radio("Seleziona il tipo di tool di cui hai bisogno", ["De Minimis","Ricerca Avanzata"], key=f"choosed_mood_{UUID}")#, "Privato"
     
     if aa== "De Minimis" :
         st.title("Verifica aiuti di stato")
@@ -218,7 +218,7 @@ def app():
                      "Descrizione", 
                      "Data Concessione", 
                      "CUP", 
-                     "Denominazione", 
+                     "Denominazione Beneficiario", 
                      "C.F. Beneficiario", 
                      "Regione", 
                      "Autorità Concedente",
@@ -273,7 +273,7 @@ def app():
                     with col2:
                         input = st.text_input(f" {param} :",key=f"get_{param}_{UUID}")
                         richieste[f"{param}"]=input
-        st.write(TABAGG)
+        # st.write(TABAGG)
         a=0
         for key in richieste:
             # if richieste[key] == None: 

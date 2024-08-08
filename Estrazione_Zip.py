@@ -39,4 +39,4 @@ cartella_di_appoggio = "N:\\035-DEMINIMIS\\01-DOWNLOAD_DATI\\xml"
 
 estrai_zip_in_cartella_di_appoggio(base_dir, cartella_di_appoggio)
 
-os.system('python prova.py > Processo_Aggiornamento\\Conversione_XML_CSV.log 2>&1')
+os.system('python conversione.py > Processo_Aggiornamento\\Conversione_XML_CSV.log 2>&1')
