@@ -34,17 +34,23 @@ A questo punto cliccando sul pulsante **Esegui Ricerca** in basso avremo le info
 #### Esempio pratico
 Supponiamo di voler fare la ricerca per un nostro cliente **POWERSOFT** che ha 3 imprese collegate: 
 
-![Home](Immagini\Pre-Ricerca.png)
+![PreRicerca](Immagini/Pre-Ricerca.png)
 
 Successivamente cliccando Esegui ricerca avremo 3 messaggi importanti che compariranno: 
 
 ![Risultato](Immagini\risultato.png)
+
+
 Il primo messaggio racchiude un rapido riscontro con il nome dell'azienda per la quale abbiamo eseguito la ricerca e il valore in euro di aiut che l'azienda può ancora richiedere in regime De Minimis. 
 
 ![Allert1](Immagini\Allert1.png)
+
+
 Questo primo allert è molto importante, perchè, purtroppo, il Ministero non sempre fornisce dati aggiornati al 100% di conseguenza è **Sempre** buona pratica verificare con il cliente su negli ultimi 15/30 giorni hanno avuto provvedimenti di revoca o concessione. 
 
 ![Allert2](Immagini\Allert2.png)
+
+
 Questo allert ci ricorda che gli aiuti alle aziende nel settore agricolo e dell'acquacultura non vengono valorizzati in questo database e di conseguenza riporta il link cliccabile per procedere alla verifica nel caso l'azienda si trovi in uno di questi settori. 
 
 ![pulsantino](Immagini\st.button.png)
@@ -56,14 +62,20 @@ Infine cliccando il pulsante **Download Excel** è possibile scaricare il riepil
 Scegliendo invece La ricerca avanzata avremo a disposizione diversi campi che possiamo scegliere se valorizzare o meno, è importante però che almeno un campo venga valorizzato per eseguire la ricerca. 
 I campi di ricerca sono: 
 `Identificativo Misura (CAR)`, `Titolo Misura`, `COR`, `Descrizione`, `Data Concessione`, `CUP`, `Denominazione Beneficiario`, `C.F. Beneficiario`, `Regione`, `Autorità Concedente`, `Numero di riferimento della misura`, `Tipo Procedimento`, `Regolamento/Comunicazione`, `Settore di attività`. 
-Una volta valorizzati i campi ed eseguita la ricerca avremo subito un'anteprima della nostra ricerca, se i risultati hanno meno di 50 aiuti allora potremo visualizzare subito tutti i risultati della nostra ricerca: 
+Una volta valorizzati i campi ed eseguita la ricerca avremo subito un'anteprima della nostra ricerca, se i risultati hanno meno di 50 aiuti allora potremo visualizzare subito tutti i risultati della nostra ricerca:
+
+
 ![Tutti](Immagini\Lessthen50.png)
 
 Se invece la nostra ricerca restituisce più di 50 risultati, ma meno di 100.000 allora la visualizzazione riguarderà solo i primi 50 risultati, ma l'excel riassuntivo scaricabile sarà comunque composto da tutti i campi. 
+
+
 ![Quasi_Tutti](Immagini\Morethen50.png)
 
 
 Se la ricerca restituisce più di 100.000 risultati, invece, continueremo a visualizzare i primi 50 risultati, ma l'excel sarà composto solo dai primi 100.000, questo limite è modificabile per esigenze specfiche; tuttavia è importante tenerlo se non stretttamente necessaria la sua rimozione in quanto la compilazione di excel eccessivamente corposi appesantisce troppo il sistema rendendo il programma lento macchinoso sotto queste circostanze
+
+
 ![Haiesagerato](Immagini\HaiEsagerato.png)
 
 Infine, abbiamo il tasto per scaricare l'excel riepilogativo della nostra ricerca

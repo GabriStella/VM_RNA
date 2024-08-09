@@ -25,7 +25,7 @@ def app():
     per_ultag=leggi_opzioni_da_file("UAG.txt")
     TABELLA=leggi_opzioni_da_file("TAB_UP.txt")
     TABAGG=TABELLA[0]
-    aa = st.sidebar.radio("Seleziona il tipo di tool di cui hai bisogno", ["De Minimis","Ricerca Avanzata"], key=f"choosed_mood_{UUID}")#, "Privato"
+    aa = st.sidebar.radio("Seleziona il tipo di tool di cui hai bisogno", ["De Minimis","Ricerca Avanzata", "Privato"], key=f"choosed_mood_{UUID}")#
     
     if aa== "De Minimis" :
         st.title("Verifica aiuti di stato")
@@ -325,16 +325,25 @@ def app():
         # st.write(richieste)
         # st.write(ppp)
     elif aa == "Privato":
+        from pathlib import Path
         print("someone enter in privato")
         PW = st.text_input("SEI TU?", key="passwordd")
         if st.button("Si, sono io"):
             if PW== "MARANZA":
-                if st.button("Esegui Ciclo"):
-                    result = subprocess.run(['python', 'zzzzz.py'], capture_output=True, text=True)
+                # if st.button("Esegui Ciclo"):
+                #     result = subprocess.run(['python', 'zzzzz.py'], capture_output=True, text=True)
+                readme_path = Path('README.md')
+
+                with readme_path.open('r', encoding='utf-8') as file:
+                    readme_content = file.read()
+
+                st.markdown(readme_content, unsafe_allow_html=True)
+            
+            
             else:
                 print("accesso Negato") 
                 st.write("sembra che non sia tu mi disp")
-                st.write("`RIP`")
+                # st.write("`RIP`")
     else:
         st.write("Mancata Selezione tool")
     # CF 
